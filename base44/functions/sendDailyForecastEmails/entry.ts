@@ -66,14 +66,24 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Allow direct admin invocation; workflow (system) calls have no user and proceed.
+    // Shared secret for scheduled workflow invocations. An admin may also call
+    // directly; everyone else must present the cron secret header.
+    const providedSecret =
+      req.headers.get("x-cron-secret") || (req.headers.get("X-Cron-Secret") ?? "");
+
+    let isAdmin = false;
     try {
       const user = await base44.auth.me();
-      if (user && user.role !== "admin") {
-        return Response.json({ error: "Forbidden" }, { status: 403 });
-      }
+      if (user) isAdmin = user.role === "admin";
     } catch (e) {
-      // No user context — scheduled workflow invocation, continue.
+      // No user context — only allowed via the cron secret below.
+    }
+
+    const cronSecret = process.env.CRON_SECRET;
+    const secretOk = cronSecret && providedSecret && providedSecret === cronSecret;
+
+    if (!isAdmin && !secretOk) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const users = await base44.asServiceRole.entities.User.list("-created_date", 500);

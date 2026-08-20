@@ -28,7 +28,10 @@
         "send_emails": {
           "call": "invoke_backend_function",
           "with": {
-            "function_name": "sendDailyForecastEmails"
+            "function_name": "sendDailyForecastEmails",
+            "headers": {
+              "x-cron-secret": "${{ secrets.CRON_SECRET }}"
+            }
           },
           "then": "end",
           "x-base44": {
