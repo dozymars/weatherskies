@@ -51,13 +51,13 @@ export default function WeatherSearch({ onSelect, onUseMyLocation, locating }) {
   return (
     <div ref={boxRef} className="relative w-full max-w-md">
       <div className="relative flex items-center">
-        <Search className="absolute left-3 w-4 h-4 text-white/60 pointer-events-none" />
+        <Search className="absolute left-3 w-4 h-4 text-slate-400 pointer-events-none" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
           placeholder="Search city or place…"
-          className="w-full h-10 pl-10 pr-16 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white placeholder-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition"
+          className="w-full h-10 pl-10 pr-16 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition"
         />
         {query && (
           <button
@@ -65,7 +65,7 @@ export default function WeatherSearch({ onSelect, onUseMyLocation, locating }) {
               setQuery("");
               setResults([]);
             }}
-            className="absolute right-12 w-6 h-6 flex items-center justify-center text-white/70 hover:text-white"
+            className="absolute right-12 w-6 h-6 flex items-center justify-center text-slate-400 hover:text-slate-600"
           >
             <X className="w-4 h-4" />
           </button>
@@ -73,7 +73,7 @@ export default function WeatherSearch({ onSelect, onUseMyLocation, locating }) {
         <button
           onClick={onUseMyLocation}
           title="Use my location"
-          className="absolute right-2 w-7 h-7 flex items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/15 transition"
+          className="absolute right-2 w-7 h-7 flex items-center justify-center rounded-full text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition"
         >
           {locating ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -84,7 +84,7 @@ export default function WeatherSearch({ onSelect, onUseMyLocation, locating }) {
       </div>
 
       {open && (results.length > 0 || (loading && query.length >= 2)) && (
-        <div className="absolute top-12 left-0 right-0 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden z-50 border border-white/40">
+        <div className="absolute top-12 left-0 right-0 bg-white rounded-2xl shadow-2xl overflow-hidden z-50 border border-slate-200">
           {loading && results.length === 0 && (
             <div className="flex items-center justify-center py-4 text-slate-500">
               <Loader2 className="w-4 h-4 animate-spin mr-2" /> Searching…

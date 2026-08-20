@@ -21,14 +21,14 @@ export default function SavedLocationsDropdown({ currentLocation, onSelect }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm hover:bg-white/25 transition"
+        className="flex items-center gap-1.5 h-9 px-3 rounded-full bg-white border border-slate-300 text-slate-700 text-sm hover:bg-slate-100 transition"
       >
         <Star className="w-4 h-4" />
         <span className="hidden sm:inline">Saved</span>
         <ChevronDown className="w-3.5 h-3.5" />
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/40 overflow-hidden z-50 max-h-80 overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50 max-h-80 overflow-y-auto">
           {savedLocations.map((l) => {
             const key = l.id || `${l.latitude},${l.longitude}`;
             const active =

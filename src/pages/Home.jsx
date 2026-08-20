@@ -12,7 +12,6 @@ import PrecipChart from "@/components/weather/PrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
-import { getWeatherInfo, getBackground } from "@/lib/weatherCodes";
 import { BACKGROUND_THEMES } from "@/lib/backgroundThemes";
 import BackgroundThemePicker from "@/components/weather/BackgroundThemePicker";
 import { usePreferences } from "@/lib/PreferencesContext";
@@ -141,26 +140,21 @@ export default function Home() {
   }
 
   const current = forecast?.current;
-  const info = current ? getWeatherInfo(current.weather_code) : null;
   const themeGradient = BACKGROUND_THEMES.find((t) => t.id === backgroundTheme)?.gradient;
-  const bg = themeGradient
-    ? themeGradient
-    : info
-      ? getBackground(info.theme, current.is_day === 1)
-      : "from-slate-700 via-slate-800 to-slate-900";
+  const bg = themeGradient || "from-white to-slate-100";
 
   return (
     <div
       className={`min-h-screen bg-gradient-to-br ${bg} transition-colors duration-700`}
     >
-      <header className="sticky top-0 z-40 bg-black/10 backdrop-blur-md border-b border-white/10">
+      <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <div className="flex items-center gap-2 text-white shrink-0">
+          <div className="flex items-center gap-2 text-slate-900 shrink-0">
             <Cloud className="w-6 h-6" strokeWidth={1.5} />
             <span className="font-semibold tracking-tight hidden sm:block">Skyline</span>
           </div>
           <div className="flex-1 flex items-center justify-center gap-3">
-            <span className="text-white font-semibold text-sm tracking-tight whitespace-nowrap hidden sm:block">
+            <span className="text-slate-900 font-semibold text-sm tracking-tight whitespace-nowrap hidden sm:block">
               {location.name}
             </span>
             <WeatherSearch
@@ -186,16 +180,16 @@ export default function Home() {
 
         <AnimatePresence mode="wait">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-32 text-white/80">
+            <div className="flex flex-col items-center justify-center py-32 text-slate-500">
               <Loader2 className="w-8 h-8 animate-spin mb-3" />
               <p className="text-sm">Loading forecast…</p>
             </div>
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-32 text-white">
+            <div className="flex flex-col items-center justify-center py-32 text-slate-900">
               <p className="text-base mb-3">{error}</p>
               <button
                 onClick={() => loadData(location)}
-                className="px-5 py-2 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-sm font-medium transition"
+                className="px-5 py-2 rounded-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium transition"
               >
                 Retry
               </button>
@@ -227,7 +221,7 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
-      <footer className="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-center text-white/50 text-xs">
+      <footer className="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-center text-slate-400 text-xs">
         Weather data by Open-Meteo · Alerts by NWS · AQI by Open-Meteo
       </footer>
     </div>

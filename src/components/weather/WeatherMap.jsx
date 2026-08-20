@@ -18,7 +18,7 @@ export default function WeatherMap({ location }) {
       }).setView([location.latitude, location.longitude], 8);
 
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
         { maxZoom: 19 }
       ).addTo(mapRef.current);
 
@@ -40,13 +40,13 @@ export default function WeatherMap({ location }) {
   }, []);
 
   return (
-    <div className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-5 sm:p-6 overflow-hidden">
-      <h3 className="text-white/90 text-sm font-semibold uppercase tracking-wider mb-4">
+    <div className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6 overflow-hidden">
+      <h3 className="text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
         Map · {location?.name}
       </h3>
       <div
         ref={containerRef}
-        className="w-full h-64 rounded-2xl overflow-hidden border border-white/10"
+        className="w-full h-64 rounded-2xl overflow-hidden border border-slate-200"
       />
     </div>
   );

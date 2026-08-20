@@ -20,7 +20,7 @@ export default function ShareButton({ location }) {
     <button
       onClick={handleShare}
       title="Share weather"
-      className="flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/15 border border-white/20 text-white text-sm hover:bg-white/25 transition"
+      className="flex items-center gap-1.5 h-9 px-3 rounded-full bg-white border border-slate-300 text-slate-700 text-sm hover:bg-slate-100 transition"
     >
       {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
       <span className="hidden sm:inline">{copied ? "Copied" : "Share"}</span>

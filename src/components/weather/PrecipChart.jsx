@@ -24,9 +24,9 @@ export default function PrecipChart({ hourly }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-5 sm:p-6"
+      className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6"
     >
-      <div className="flex items-center gap-2 text-white/90 text-sm font-semibold uppercase tracking-wider mb-4">
+      <div className="flex items-center gap-2 text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
         <Droplets className="w-4 h-4" /> Precipitation Chance
       </div>
       <ResponsiveContainer width="100%" height={140}>
@@ -39,20 +39,20 @@ export default function PrecipChart({ hourly }) {
           </defs>
           <XAxis
             dataKey="time"
-            tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 11 }}
+            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             interval={3}
           />
           <Tooltip
             contentStyle={{
-              background: "rgba(15,23,42,0.9)",
-              border: "none",
+              background: "rgba(255,255,255,0.95)",
+              border: "1px solid #e2e8f0",
               borderRadius: 12,
-              color: "#fff",
+              color: "#0f172a",
               fontSize: 12,
             }}
-            labelStyle={{ color: "rgba(255,255,255,0.7)" }}
+            labelStyle={{ color: "rgba(71,85,105,0.9)" }}
             formatter={(v) => [`${v}%`, "Precip"]}
           />
           <Area

@@ -20,9 +20,9 @@ export default function AirQualityCard({ aqi }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-5 sm:p-6"
+      className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6"
     >
-      <div className="flex items-center gap-2 text-white/90 text-sm font-semibold uppercase tracking-wider mb-4">
+      <div className="flex items-center gap-2 text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
         <Wind className="w-4 h-4" /> Air Quality
       </div>
       <div className="flex items-center gap-4">
@@ -36,8 +36,8 @@ export default function AirQualityCard({ aqi }) {
           {Math.round(aqi)}
         </div>
         <div className="min-w-0">
-          <div className="text-lg font-semibold text-white">{level.label}</div>
-          <p className="text-xs text-white/70 mt-0.5">{level.advice}</p>
+          <div className="text-lg font-semibold text-slate-900">{level.label}</div>
+          <p className="text-xs text-slate-500 mt-0.5">{level.advice}</p>
         </div>
       </div>
     </motion.div>

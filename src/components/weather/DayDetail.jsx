@@ -82,7 +82,7 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
       <div className="py-4 space-y-4">
         {dayHours.length > 0 && (
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-white/60 mb-2 font-medium">
+            <p className="text-[11px] uppercase tracking-wider text-slate-400 mb-2 font-medium">
               Hourly
             </p>
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
@@ -93,16 +93,16 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
                 return (
                   <div
                     key={k}
-                    className="flex flex-col items-center gap-1 min-w-[52px] rounded-xl bg-white/5 px-2 py-2"
+                    className="flex flex-col items-center gap-1 min-w-[52px] rounded-xl bg-white border border-slate-200 px-2 py-2"
                   >
-                    <span className="text-[10px] text-white/70">
+                    <span className="text-[10px] text-slate-500">
                       {t.toLocaleTimeString([], { hour: "numeric" })}
                     </span>
-                    <Icon className="w-5 h-5 text-white" strokeWidth={1.5} />
-                    <span className="text-xs font-semibold text-white">
+                    <Icon className="w-5 h-5 text-slate-700" strokeWidth={1.5} />
+                    <span className="text-xs font-semibold text-slate-900">
                       {Math.round(convertTemp(hourly.temperature_2m[k], units))}°
                     </span>
-                    <span className="flex items-center gap-0.5 text-[9px] text-sky-200">
+                    <span className="flex items-center gap-0.5 text-[9px] text-sky-600">
                       <Droplets className="w-2.5 h-2.5" />
                       {hourly.precipitation_probability?.[k] ?? 0}%
                     </span>
@@ -119,15 +119,15 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
             return (
               <div
                 key={s.label}
-                className="rounded-xl bg-white/5 border border-white/10 px-3 py-2"
+                className="rounded-xl bg-white border border-slate-200 px-3 py-2"
               >
-                <div className="flex items-center gap-1.5 text-white/60 mb-1">
+                <div className="flex items-center gap-1.5 text-slate-500 mb-1">
                   <SIcon className="w-3 h-3" />
                   <span className="text-[10px] uppercase tracking-wider font-medium">
                     {s.label}
                   </span>
                 </div>
-                <div className="text-sm font-semibold text-white">{s.value}</div>
+                <div className="text-sm font-semibold text-slate-900">{s.value}</div>
               </div>
             );
           })}

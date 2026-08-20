@@ -12,7 +12,7 @@ export default function SaveLocationButton({ location }) {
       className={`flex items-center gap-1.5 h-9 px-3 rounded-full border text-sm transition ${
         saved
           ? "bg-amber-400 text-slate-900 border-amber-300"
-          : "bg-white/15 text-white border-white/20 hover:bg-white/25"
+          : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
       }`}
     >
       <Star className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
