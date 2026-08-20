@@ -43,22 +43,46 @@ export async function getForecast(lat, lon) {
 }
 
 export async function reverseGeocode(lat, lon) {
-  const url = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=en&format=json`;
+  // BigDataCloud's free client-side reverse geocoder (no API key required).
   try {
+    const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error("reverse geocode failed");
-    const data = await res.json();
-    if (data.results && data.results.length > 0) {
-      const r = data.results[0];
-      return {
-        id: r.id,
-        name: r.name,
-        country: r.country_code,
-        region: r.admin1 || "",
-        latitude: r.latitude,
-        longitude: r.longitude,
-        label: [r.name, r.admin1, r.country_code].filter(Boolean).join(", "),
-      };
+    if (res.ok) {
+      const r = await res.json();
+      const name = r.city || r.locality || r.principalSubdivision || "My Location";
+      if (name !== "My Location") {
+        return {
+          id: `${lat},${lon}`,
+          name,
+          country: r.countryCode || "",
+          region: r.principalSubdivision || "",
+          latitude: lat,
+          longitude: lon,
+          label: [name, r.principalSubdivision, r.countryCode].filter(Boolean).join(", "),
+        };
+      }
+    }
+  } catch (e) {
+    // fall through to Open-Meteo reverse
+  }
+  // Fallback: Open-Meteo reverse geocoder.
+  try {
+    const url = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=en&format=json`;
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.results && data.results.length > 0) {
+        const r = data.results[0];
+        return {
+          id: r.id,
+          name: r.name,
+          country: r.country_code,
+          region: r.admin1 || "",
+          latitude: r.latitude,
+          longitude: r.longitude,
+          label: [r.name, r.admin1, r.country_code].filter(Boolean).join(", "),
+        };
+      }
     }
   } catch (e) {
     // fall through to coordinate label
