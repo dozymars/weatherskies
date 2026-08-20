@@ -1,14 +1,16 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Droplets, Wind } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Droplets, Wind, ChevronDown } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { usePreferences } from "@/lib/PreferencesContext";
 import { convertTemp, convertWind, windUnit } from "@/lib/units";
+import DayDetail from "./DayDetail";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export default function DailyForecast({ daily }) {
+export default function DailyForecast({ daily, hourly, timezone }) {
   const { units } = usePreferences();
+  const [expandedDay, setExpandedDay] = useState(null);
   if (!daily) return null;
   const maxes = daily.temperature_2m_max.map((c) => convertTemp(c, units));
   const mins = daily.temperature_2m_min.map((c) => convertTemp(c, units));
@@ -38,35 +40,60 @@ export default function DailyForecast({ daily }) {
           const leftPct = ((min - globalMin) / range) * 100;
           const widthPct = ((max - min) / range) * 100;
           const pop = daily.precipitation_probability_max?.[i] ?? 0;
+          const isOpen = expandedDay === i;
 
           return (
-            <div
-              key={day}
-              className="grid grid-cols-[64px_36px_44px_1fr_44px] sm:grid-cols-[80px_40px_52px_1fr_52px] items-center gap-2 sm:gap-3 py-3 border-b border-white/10 last:border-0"
-            >
-              <span className="text-sm font-medium text-white/90">{dayLabel}</span>
-              <Icon className="w-7 h-7 text-white/90 justify-self-center" strokeWidth={1.5} />
-              <span className="flex items-center gap-0.5 text-[11px] text-sky-200">
-                <Droplets className="w-3 h-3" />
-                {pop}%
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-white/60 w-7 text-right">{Math.round(min)}°</span>
-                <div className="relative flex-1 h-1.5 rounded-full bg-white/15">
-                  <div
-                    className="absolute h-full rounded-full bg-gradient-to-r from-sky-300 via-amber-300 to-orange-400"
-                    style={{
-                      left: `${leftPct}%`,
-                      width: `${Math.max(widthPct, 8)}%`,
-                    }}
+            <div key={day} className="border-b border-white/10 last:border-0">
+              <button
+                type="button"
+                onClick={() => setExpandedDay(isOpen ? null : i)}
+                className={`w-full grid grid-cols-[64px_36px_44px_1fr_44px] sm:grid-cols-[80px_40px_52px_1fr_52px] items-center gap-2 sm:gap-3 py-3 text-left transition rounded-lg ${
+                  isOpen ? "bg-white/5" : "hover:bg-white/5"
+                }`}
+              >
+                <span className="text-sm font-medium text-white/90 flex items-center gap-1">
+                  {dayLabel}
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-white/50 transition-transform ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
                   />
+                </span>
+                <Icon className="w-7 h-7 text-white/90 justify-self-center" strokeWidth={1.5} />
+                <span className="flex items-center gap-0.5 text-[11px] text-sky-200">
+                  <Droplets className="w-3 h-3" />
+                  {pop}%
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-white/60 w-7 text-right">{Math.round(min)}°</span>
+                  <div className="relative flex-1 h-1.5 rounded-full bg-white/15">
+                    <div
+                      className="absolute h-full rounded-full bg-gradient-to-r from-sky-300 via-amber-300 to-orange-400"
+                      style={{
+                        left: `${leftPct}%`,
+                        width: `${Math.max(widthPct, 8)}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm font-semibold text-white w-7">{Math.round(max)}°</span>
                 </div>
-                <span className="text-sm font-semibold text-white w-7">{Math.round(max)}°</span>
-              </div>
-              <span className="flex items-center gap-0.5 text-[11px] text-white/60 justify-end">
-                <Wind className="w-3 h-3" />
-                {Math.round(convertWind(daily.wind_speed_10m_max?.[i] ?? 0, units))}
-              </span>
+                <span className="flex items-center gap-0.5 text-[11px] text-white/60 justify-end">
+                  <Wind className="w-3 h-3" />
+                  {Math.round(convertWind(daily.wind_speed_10m_max?.[i] ?? 0, units))}
+                </span>
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <div className="px-1">
+                    <DayDetail
+                      dayIndex={i}
+                      daily={daily}
+                      hourly={hourly}
+                      timezone={timezone}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}

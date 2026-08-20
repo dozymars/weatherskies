@@ -210,7 +210,7 @@ export default function Home() {
                 <PrecipChart hourly={forecast.hourly} />
               </div>
               <div className="space-y-6">
-                <DailyForecast daily={forecast.daily} />
+                <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
                 <AirQualityCard aqi={aqi} />
                 <WeatherMap location={location} />
               </div>
