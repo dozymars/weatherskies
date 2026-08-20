@@ -153,7 +153,10 @@ export default function Home() {
             <Cloud className="w-6 h-6" strokeWidth={1.5} />
             <span className="font-semibold tracking-tight hidden sm:block">Skyline</span>
           </div>
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex items-center justify-center gap-3">
+            <span className="text-white font-semibold text-sm tracking-tight whitespace-nowrap hidden sm:block">
+              {location.name}
+            </span>
             <WeatherSearch
               onSelect={handleSelect}
               onUseMyLocation={handleUseMyLocation}
