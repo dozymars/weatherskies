@@ -11,6 +11,7 @@ import AirQualityCard from "@/components/weather/AirQualityCard";
 import PrecipChart from "@/components/weather/PrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
+import HeaderAuth from "@/components/weather/HeaderAuth";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
 import { getWeatherInfo, getBackground } from "@/lib/weatherCodes";
 
@@ -162,6 +163,7 @@ export default function Home() {
           <div className="flex items-center gap-2 shrink-0">
             <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
             <UnitToggle />
+            <HeaderAuth />
           </div>
         </div>
       </header>
