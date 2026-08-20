@@ -13,6 +13,9 @@ import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown"
 import UnitToggle from "@/components/weather/UnitToggle";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
 import { getWeatherInfo, getBackground } from "@/lib/weatherCodes";
+import { BACKGROUND_THEMES } from "@/lib/backgroundThemes";
+import BackgroundThemePicker from "@/components/weather/BackgroundThemePicker";
+import { usePreferences } from "@/lib/PreferencesContext";
 
 const DEFAULT_LOCATION = {
   id: "nyc",
@@ -64,6 +67,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [locating, setLocating] = useState(false);
+  const { backgroundTheme, setBackgroundTheme } = usePreferences();
 
   const loadData = useCallback(async (loc) => {
     setLoading(true);
@@ -138,9 +142,12 @@ export default function Home() {
 
   const current = forecast?.current;
   const info = current ? getWeatherInfo(current.weather_code) : null;
-  const bg = info
-    ? getBackground(info.theme, current.is_day === 1)
-    : "from-slate-700 via-slate-800 to-slate-900";
+  const themeGradient = BACKGROUND_THEMES.find((t) => t.id === backgroundTheme)?.gradient;
+  const bg = themeGradient
+    ? themeGradient
+    : info
+      ? getBackground(info.theme, current.is_day === 1)
+      : "from-slate-700 via-slate-800 to-slate-900";
 
   return (
     <div
@@ -164,6 +171,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
+            <BackgroundThemePicker value={backgroundTheme} onChange={setBackgroundTheme} />
             <UnitToggle />
           </div>
         </div>

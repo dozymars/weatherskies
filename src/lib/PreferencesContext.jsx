@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/AuthContext";
 
 const LOC_KEY = "weather_saved_locations";
 const UNITS_KEY = "weather_units";
+const BG_KEY = "weather_background_theme";
 
 const PreferencesContext = createContext(null);
 
@@ -11,6 +12,9 @@ export function PreferencesProvider({ children }) {
   const { user, isAuthenticated } = useAuth();
   const [units, setUnitsState] = useState(
     () => localStorage.getItem(UNITS_KEY) || "metric"
+  );
+  const [backgroundTheme, setBackgroundThemeState] = useState(
+    () => localStorage.getItem(BG_KEY) || "auto"
   );
   const [savedLocations, setSavedLocations] = useState(() => {
     try {
@@ -73,6 +77,11 @@ export function PreferencesProvider({ children }) {
     [isAuthenticated]
   );
 
+  const persistBackgroundTheme = useCallback((next) => {
+    setBackgroundThemeState(next);
+    localStorage.setItem(BG_KEY, next);
+  }, []);
+
   const persistLocations = useCallback(
     (next) => {
       setSavedLocations(next);
@@ -113,7 +122,7 @@ export function PreferencesProvider({ children }) {
 
   return (
     <PreferencesContext.Provider
-      value={{ units, setUnits: persistUnits, savedLocations, toggleSaved, isSaved }}
+      value={{ units, setUnits: persistUnits, backgroundTheme, setBackgroundTheme: persistBackgroundTheme, savedLocations, toggleSaved, isSaved }}
     >
       {children}
     </PreferencesContext.Provider>
