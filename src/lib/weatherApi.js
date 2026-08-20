@@ -73,3 +73,41 @@ export async function reverseGeocode(lat, lon) {
     label: `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
   };
 }
+
+// Air Quality Index via Open-Meteo Air Quality API (no key required).
+export async function getAQI(lat, lon) {
+  const params = new URLSearchParams({
+    latitude: String(lat),
+    longitude: String(lon),
+    current: "us_aqi",
+    timezone: "auto",
+  });
+  const res = await fetch(
+    `https://air-quality-api.open-meteo.com/v1/air-quality?${params.toString()}`
+  );
+  if (!res.ok) throw new Error("Failed to fetch AQI");
+  const data = await res.json();
+  return data.current?.us_aqi ?? null;
+}
+
+// Severe weather alerts via the US National Weather Service (no key required).
+// Only covers US locations; returns [] elsewhere.
+export async function getAlerts(lat, lon) {
+  const res = await fetch(
+    `https://api.weather.gov/alerts/active?point=${lat},${lon}`,
+    { headers: { Accept: "application/geo+json" } }
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  if (!data.features) return [];
+  return data.features.map((f) => ({
+    event: f.properties.event,
+    headline: f.properties.headline,
+    description: f.properties.description,
+    instruction: f.properties.instruction,
+    severity: f.properties.severity,
+    onset: f.properties.onset,
+    expires: f.properties.expires,
+    senderName: f.properties.senderName,
+  }));
+}

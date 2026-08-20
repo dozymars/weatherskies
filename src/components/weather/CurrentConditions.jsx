@@ -2,6 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, Wind, Droplets, Gauge, Eye, Sunrise, Sunset, Thermometer } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
+import { usePreferences } from "@/lib/PreferencesContext";
+import { convertTemp, tempUnit, convertWind, windUnit } from "@/lib/units";
+import SaveLocationButton from "./SaveLocationButton";
+import ShareButton from "./ShareButton";
 
 function toCardinal(deg) {
   const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
@@ -9,10 +13,9 @@ function toCardinal(deg) {
 }
 
 export default function CurrentConditions({ location, current, daily }) {
+  const { units } = usePreferences();
   const info = getWeatherInfo(current.weather_code);
   const Icon = info.icon;
-  const isDay = current.is_day === 1;
-
   const sunrise = daily?.sunrise?.[0];
   const sunset = daily?.sunset?.[0];
 
@@ -20,7 +23,7 @@ export default function CurrentConditions({ location, current, daily }) {
     {
       icon: Thermometer,
       label: "Feels Like",
-      value: `${Math.round(current.apparent_temperature)}°`,
+      value: `${Math.round(convertTemp(current.apparent_temperature, units))}${tempUnit(units)}`,
     },
     {
       icon: Droplets,
@@ -30,7 +33,7 @@ export default function CurrentConditions({ location, current, daily }) {
     {
       icon: Wind,
       label: "Wind",
-      value: `${Math.round(current.wind_speed_10m)} km/h ${toCardinal(current.wind_direction_10m)}`,
+      value: `${Math.round(convertWind(current.wind_speed_10m, units))} ${windUnit(units)} ${toCardinal(current.wind_direction_10m)}`,
     },
     {
       icon: Gauge,
@@ -40,12 +43,21 @@ export default function CurrentConditions({ location, current, daily }) {
     {
       icon: Eye,
       label: "Precipitation",
-      value: `${current.precipitation?.toFixed(1) ?? 0} mm`,
+      value: `${(current.precipitation ?? 0).toFixed(1)} mm`,
     },
     {
       icon: Sunrise,
       label: "Sunrise",
-      value: sunrise ? new Date(sunrise).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—",
+      value: sunrise
+        ? new Date(sunrise).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        : "—",
+    },
+    {
+      icon: Sunset,
+      label: "Sunset",
+      value: sunset
+        ? new Date(sunset).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        : "—",
     },
   ];
 
@@ -56,9 +68,17 @@ export default function CurrentConditions({ location, current, daily }) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="text-white"
     >
-      <div className="flex items-center gap-1.5 text-white/80 mb-1">
-        <MapPin className="w-4 h-4" />
-        <span className="text-sm font-medium tracking-wide">{location.label}</span>
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <div className="flex items-center gap-1.5 text-white/80 min-w-0">
+          <MapPin className="w-4 h-4 shrink-0" />
+          <span className="text-sm font-medium tracking-wide truncate">
+            {location.label}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <SaveLocationButton location={location} />
+          <ShareButton location={location} />
+        </div>
       </div>
       <p className="text-xs text-white/60 mb-6">
         {new Date().toLocaleDateString(undefined, {
@@ -84,9 +104,9 @@ export default function CurrentConditions({ location, current, daily }) {
         <div>
           <div className="flex items-start">
             <span className="text-7xl sm:text-8xl font-extralight leading-none tracking-tighter">
-              {Math.round(current.temperature_2m)}
+              {Math.round(convertTemp(current.temperature_2m, units))}
             </span>
-            <span className="text-3xl font-light mt-2 ml-1">°C</span>
+            <span className="text-3xl font-light mt-2 ml-1">{tempUnit(units)}</span>
           </div>
           <p className="text-lg font-medium text-white/90 mt-1">{info.label}</p>
         </div>
@@ -110,15 +130,6 @@ export default function CurrentConditions({ location, current, daily }) {
             </div>
           );
         })}
-        <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-4 py-3">
-          <div className="flex items-center gap-1.5 text-white/70 mb-1">
-            <Sunset className="w-3.5 h-3.5" />
-            <span className="text-[11px] uppercase tracking-wider font-medium">Sunset</span>
-          </div>
-          <div className="text-base font-semibold">
-            {sunset ? new Date(sunset).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—"}
-          </div>
-        </div>
       </div>
     </motion.div>
   );

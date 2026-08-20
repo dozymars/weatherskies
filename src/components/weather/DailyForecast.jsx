@@ -2,13 +2,16 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Droplets, Wind } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
+import { usePreferences } from "@/lib/PreferencesContext";
+import { convertTemp, convertWind, windUnit } from "@/lib/units";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function DailyForecast({ daily }) {
+  const { units } = usePreferences();
   if (!daily) return null;
-  const maxes = daily.temperature_2m_max;
-  const mins = daily.temperature_2m_min;
+  const maxes = daily.temperature_2m_max.map((c) => convertTemp(c, units));
+  const mins = daily.temperature_2m_min.map((c) => convertTemp(c, units));
   const globalMax = Math.max(...maxes);
   const globalMin = Math.min(...mins);
   const range = Math.max(globalMax - globalMin, 1);
@@ -62,12 +65,13 @@ export default function DailyForecast({ daily }) {
               </div>
               <span className="flex items-center gap-0.5 text-[11px] text-white/60 justify-end">
                 <Wind className="w-3 h-3" />
-                {Math.round(daily.wind_speed_10m_max?.[i] ?? 0)}
+                {Math.round(convertWind(daily.wind_speed_10m_max?.[i] ?? 0, units))}
               </span>
             </div>
           );
         })}
       </div>
+      <p className="text-[11px] text-white/50 mt-2 text-right">Wind in {windUnit(units)}</p>
     </motion.div>
   );
 }

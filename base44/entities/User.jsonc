@@ -7,6 +7,44 @@
         "admin",
         "user"
       ]
+    },
+    "saved_locations": {
+      "type": "array",
+      "description": "Locations the user saved for quick access and daily forecast emails",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "units": {
+      "type": "string",
+      "enum": [
+        "metric",
+        "imperial"
+      ],
+      "description": "Preferred temperature and wind speed units"
     }
   },
   "required": [

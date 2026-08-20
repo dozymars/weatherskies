@@ -2,11 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Droplets } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
+import { usePreferences } from "@/lib/PreferencesContext";
+import { convertTemp } from "@/lib/units";
 
 export default function HourlyForecast({ hourly, timezone }) {
+  const { units } = usePreferences();
   if (!hourly) return null;
   const now = new Date();
-  // find current hour index
   const times = hourly.time.map((t) => new Date(t));
   let startIdx = times.findIndex((t) => t >= new Date(now.getTime() - 60 * 60 * 1000));
   if (startIdx < 0) startIdx = 0;
@@ -42,7 +44,7 @@ export default function HourlyForecast({ hourly, timezone }) {
               </span>
               <Icon className="w-7 h-7 text-white" strokeWidth={1.5} />
               <span className="text-base font-semibold text-white">
-                {Math.round(hourly.temperature_2m[idx])}°
+                {Math.round(convertTemp(hourly.temperature_2m[idx], units))}°
               </span>
               <span className="flex items-center gap-0.5 text-[11px] text-sky-200">
                 <Droplets className="w-3 h-3" />
