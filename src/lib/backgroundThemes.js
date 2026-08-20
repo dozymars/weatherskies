@@ -1,7 +1,6 @@
 export const BACKGROUND_THEMES = [
   { id: "auto", label: "Auto", gradient: null },
-  { id: "midnight", label: "Midnight Navy", gradient: "from-[#1e2a4a] to-[#0f1729]" },
-  { id: "charcoal", label: "Charcoal Slate", gradient: "from-[#334155] to-[#0f172a]" },
-  { id: "indigo", label: "Deep Indigo", gradient: "from-[#312e81] to-[#1e1b4b]" },
-  { id: "graphite", label: "Graphite", gradient: "from-[#1f2937] to-[#0b0f19]" },
+  { id: "softsky", label: "Soft Sky", gradient: "from-[#e0f2fe] to-[#f1f5f9]" },
+  { id: "warmsand", label: "Warm Sand", gradient: "from-[#fef3c7] via-[#fde68a] to-[#f5f5f4]" },
+  { id: "mistgrey", label: "Mist Grey", gradient: "from-[#f1f5f9] to-[#e2e8f0]" },
 ];
