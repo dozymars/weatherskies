@@ -8,7 +8,7 @@ import DailyForecast from "@/components/weather/DailyForecast";
 import WeatherMap from "@/components/weather/WeatherMap";
 import AlertBanner from "@/components/weather/AlertBanner";
 import AirQualityCard from "@/components/weather/AirQualityCard";
-import PrecipChart from "@/components/weather/PrecipChart";
+import TempPrecipChart from "@/components/weather/TempPrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
@@ -209,7 +209,7 @@ export default function Home() {
                   daily={forecast.daily}
                 />
                 <HourlyForecast hourly={forecast.hourly} timezone={forecast.timezone} />
-                <PrecipChart hourly={forecast.hourly} />
+                <TempPrecipChart hourly={forecast.hourly} />
               </div>
               <div className="space-y-6">
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
