@@ -24,26 +24,31 @@ export default function CurrentConditions({ location, current, daily }) {
       icon: Thermometer,
       label: "Feels Like",
       value: `${Math.round(convertTemp(current.apparent_temperature, units))}${tempUnit(units)}`,
+      accent: { card: "bg-orange-50 border-orange-200", icon: "text-orange-500" },
     },
     {
       icon: Droplets,
       label: "Humidity",
       value: `${current.relative_humidity_2m}%`,
+      accent: { card: "bg-sky-50 border-sky-200", icon: "text-sky-500" },
     },
     {
       icon: Wind,
       label: "Wind",
       value: `${Math.round(convertWind(current.wind_speed_10m, units))} ${windUnit(units)} ${toCardinal(current.wind_direction_10m)}`,
+      accent: { card: "bg-teal-50 border-teal-200", icon: "text-teal-500" },
     },
     {
       icon: Gauge,
       label: "Pressure",
       value: `${Math.round(current.pressure_msl)} hPa`,
+      accent: { card: "bg-violet-50 border-violet-200", icon: "text-violet-500" },
     },
     {
       icon: Eye,
       label: "Precipitation",
       value: `${(current.precipitation ?? 0).toFixed(1)} mm`,
+      accent: { card: "bg-blue-50 border-blue-200", icon: "text-blue-500" },
     },
     {
       icon: Sunrise,
@@ -51,6 +56,7 @@ export default function CurrentConditions({ location, current, daily }) {
       value: sunrise
         ? new Date(sunrise).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
         : "—",
+      accent: { card: "bg-amber-50 border-amber-200", icon: "text-amber-500" },
     },
     {
       icon: Sunset,
@@ -58,6 +64,7 @@ export default function CurrentConditions({ location, current, daily }) {
       value: sunset
         ? new Date(sunset).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
         : "—",
+      accent: { card: "bg-indigo-50 border-indigo-200", icon: "text-indigo-500" },
     },
   ];
 
@@ -118,9 +125,9 @@ export default function CurrentConditions({ location, current, daily }) {
           return (
             <div
               key={d.label}
-              className="rounded-2xl bg-slate-100 border border-slate-200 px-4 py-3"
+              className={`rounded-2xl border px-4 py-3 ${d.accent.card}`}
             >
-              <div className="flex items-center gap-1.5 text-slate-500 mb-1">
+              <div className={`flex items-center gap-1.5 mb-1 ${d.accent.icon}`}>
                 <DIcon className="w-3.5 h-3.5" />
                 <span className="text-[11px] uppercase tracking-wider font-medium">
                   {d.label}
