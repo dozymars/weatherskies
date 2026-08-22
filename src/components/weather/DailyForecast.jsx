@@ -59,7 +59,7 @@ export default function DailyForecast({ daily, hourly, timezone }) {
                     }`}
                   />
                 </span>
-                <Icon className="w-7 h-7 text-slate-700 justify-self-center" strokeWidth={1.5} />
+                <Icon className={`w-7 h-7 justify-self-center ${info.color}`} strokeWidth={1.5} />
                 <span className="flex items-center gap-0.5 text-[11px] text-sky-600">
                   <Droplets className="w-3 h-3" />
                   {pop}%

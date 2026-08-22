@@ -98,7 +98,7 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
                     <span className="text-[10px] text-slate-500">
                       {t.toLocaleTimeString([], { hour: "numeric" })}
                     </span>
-                    <Icon className="w-5 h-5 text-slate-700" strokeWidth={1.5} />
+                    <Icon className={`w-5 h-5 ${info.color}`} strokeWidth={1.5} />
                     <span className="text-xs font-semibold text-slate-900">
                       {Math.round(convertTemp(hourly.temperature_2m[k], units))}°
                     </span>

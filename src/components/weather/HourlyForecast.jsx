@@ -42,7 +42,7 @@ export default function HourlyForecast({ hourly, timezone }) {
               <span className="text-xs font-medium text-slate-500">
                 {isNow ? "Now" : time.toLocaleTimeString([], { hour: "numeric" })}
               </span>
-              <Icon className="w-7 h-7 text-slate-700" strokeWidth={1.5} />
+              <Icon className={`w-7 h-7 ${info.color}`} strokeWidth={1.5} />
               <span className="text-base font-semibold text-slate-900">
                 {Math.round(convertTemp(hourly.temperature_2m[idx], units))}°
               </span>
