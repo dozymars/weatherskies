@@ -190,13 +190,18 @@ export default function Home() {
       className={`min-h-screen bg-gradient-to-br ${bg} transition-colors duration-700`}
     >
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <div className="flex items-center gap-2 text-slate-900 shrink-0">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 text-slate-900 shrink-0 order-1">
             <Cloud className="w-6 h-6" strokeWidth={1.5} />
-            <span className="font-semibold tracking-tight hidden sm:block">Weatherskies</span>
+            <span className="font-semibold tracking-tight hidden lg:block">Weatherskies</span>
           </div>
-          <div className="flex-1 flex items-center justify-center gap-3">
-            <span className="text-slate-900 font-semibold text-sm tracking-tight whitespace-nowrap hidden sm:block">
+          <div className="flex items-center gap-2 shrink-0 order-2 ml-auto lg:ml-0 lg:order-3">
+            <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
+            <BackgroundThemePicker value={backgroundTheme} onChange={setBackgroundTheme} />
+            <UnitToggle />
+          </div>
+          <div className="order-3 lg:order-2 basis-full lg:basis-0 flex-1 flex items-center justify-start lg:justify-center gap-3">
+            <span className="text-slate-900 font-semibold text-sm tracking-tight whitespace-nowrap hidden lg:block">
               {location.name}
             </span>
             <WeatherSearch
@@ -204,11 +209,6 @@ export default function Home() {
               onUseMyLocation={handleUseMyLocation}
               locating={locating}
             />
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
-            <BackgroundThemePicker value={backgroundTheme} onChange={setBackgroundTheme} />
-            <UnitToggle />
           </div>
         </div>
       </header>

@@ -125,15 +125,15 @@ export default function CurrentConditions({ location, current, daily }) {
           return (
             <div
               key={d.label}
-              className={`rounded-2xl border px-4 py-3 ${d.accent.card}`}
+              className={`rounded-2xl border px-4 py-3 min-w-0 ${d.accent.card}`}
             >
               <div className={`flex items-center gap-1.5 mb-1 ${d.accent.icon}`}>
-                <DIcon className="w-3.5 h-3.5" />
+                <DIcon className="w-3.5 h-3.5 shrink-0" />
                 <span className="text-[11px] uppercase tracking-wider font-medium">
                   {d.label}
                 </span>
               </div>
-              <div className="text-base font-semibold">{d.value}</div>
+              <div className="text-base font-semibold break-words">{d.value}</div>
             </div>
           );
         })}
