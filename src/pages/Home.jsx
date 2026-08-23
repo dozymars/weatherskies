@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Cloud } from "lucide-react";
 import WeatherSearch from "@/components/weather/WeatherSearch";
@@ -7,7 +7,8 @@ import HourlyForecast from "@/components/weather/HourlyForecast";
 import DailyForecast from "@/components/weather/DailyForecast";
 import WeatherMap from "@/components/weather/WeatherMap";
 import AlertBanner from "@/components/weather/AlertBanner";
-import AirQualityCard from "@/components/weather/AirQualityCard";
+import EnvironmentPanel from "@/components/weather/EnvironmentPanel";
+import { base44 } from "@/api/base44Client";
 import TempPrecipChart from "@/components/weather/TempPrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
@@ -61,7 +62,11 @@ function locationFromURL() {
 export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
   const [forecast, setForecast] = useState(null);
-  const [aqi, setAqi] = useState(null);
+  const [airData, setAirData] = useState(null);
+  const [waterData, setWaterData] = useState(null);
+  const [fireData, setFireData] = useState(null);
+  const [envLoading, setEnvLoading] = useState(false);
+  const envRunId = useRef(0);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,14 +76,44 @@ export default function Home() {
   const loadData = useCallback(async (loc) => {
     setLoading(true);
     setError(null);
+    setEnvLoading(true);
+    setWaterData(null);
+    setFireData(null);
+    const myRunId = ++envRunId.current;
+    // Environmental data loads in parallel but does not block the forecast.
+    Promise.all([
+      base44.functions
+        .invoke("getWaterData", {
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          country: loc.country,
+        })
+        .then((r) => r.data)
+        .catch(() => null),
+      base44.functions
+        .invoke("getFireData", {
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+        })
+        .then((r) => r.data)
+        .catch(() => null),
+    ])
+      .then(([w, f]) => {
+        if (myRunId !== envRunId.current) return;
+        setWaterData(w);
+        setFireData(f);
+      })
+      .finally(() => {
+        if (myRunId === envRunId.current) setEnvLoading(false);
+      });
     try {
-      const [f, a, al] = await Promise.all([
+      const [f, air, al] = await Promise.all([
         getForecast(loc.latitude, loc.longitude),
         getAQI(loc.latitude, loc.longitude).catch(() => null),
         getAlerts(loc.latitude, loc.longitude).catch(() => []),
       ]);
       setForecast(f);
-      setAqi(a);
+      setAirData(air);
       setAlerts(al);
     } catch (e) {
       setError("Unable to load forecast. Please try again.");
@@ -213,7 +248,12 @@ export default function Home() {
               </div>
               <div className="space-y-6">
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
-                <AirQualityCard aqi={aqi} />
+                <EnvironmentPanel
+                  airData={airData}
+                  waterData={waterData}
+                  fireData={fireData}
+                  envLoading={envLoading}
+                />
                 <WeatherMap location={location} />
               </div>
             </motion.div>

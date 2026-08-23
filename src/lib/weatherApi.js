@@ -98,20 +98,32 @@ export async function reverseGeocode(lat, lon) {
   };
 }
 
-// Air Quality Index via Open-Meteo Air Quality API (no key required).
+// Air quality + pollen via Open-Meteo Air Quality API (no key required).
 export async function getAQI(lat, lon) {
   const params = new URLSearchParams({
     latitude: String(lat),
     longitude: String(lon),
-    current: "us_aqi",
+    current:
+      "us_aqi,pm2_5,pm10,ozone,nitrogen_dioxide,alder_pollen,birch_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen",
     timezone: "auto",
   });
   const res = await fetch(
     `https://air-quality-api.open-meteo.com/v1/air-quality?${params.toString()}`
   );
   if (!res.ok) throw new Error("Failed to fetch AQI");
-  const data = await res.json();
-  return data.current?.us_aqi ?? null;
+  const c = (await res.json()).current || {};
+  return {
+    usAqi: c.us_aqi ?? null,
+    pm25: c.pm2_5 ?? null,
+    pm10: c.pm10 ?? null,
+    ozone: c.ozone ?? null,
+    no2: c.nitrogen_dioxide ?? null,
+    pollen: {
+      tree: Math.max(c.alder_pollen ?? 0, c.birch_pollen ?? 0, c.olive_pollen ?? 0),
+      grass: c.grass_pollen ?? 0,
+      weed: Math.max(c.mugwort_pollen ?? 0, c.ragweed_pollen ?? 0),
+    },
+  };
 }
 
 // Severe weather alerts via the US National Weather Service (no key required).
