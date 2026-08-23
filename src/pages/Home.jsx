@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Cloud } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import WeatherSearch from "@/components/weather/WeatherSearch";
 import CurrentConditions from "@/components/weather/CurrentConditions";
 import HourlyForecast from "@/components/weather/HourlyForecast";
@@ -192,7 +192,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-slate-900 shrink-0 order-1">
-            <Cloud className="w-6 h-6" strokeWidth={1.5} />
+            <img src="https://media.base44.com/images/public/6a866866b2a189c37aa2f3d0/f4c3ceccb_generated_image.png" alt="Weatherskies" className="w-7 h-7 rounded-full object-cover" />
             <span className="font-semibold tracking-tight">Weatherskies</span>
           </div>
           <div className="flex items-center gap-2 shrink-0 order-2 ml-auto lg:ml-0 lg:order-3">
