@@ -192,7 +192,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-slate-900 shrink-0 order-1">
-            <img src="https://media.base44.com/images/public/6a866866b2a189c37aa2f3d0/f4c3ceccb_generated_image.png" alt="Weatherskies" className="w-7 h-7 rounded-full object-cover" />
+            <img src="https://media.base44.com/images/public/6a866866b2a189c37aa2f3d0/9fc2fbc5e_image.png" alt="Weatherskies" className="w-7 h-7 rounded-lg object-cover" />
             <span className="font-semibold tracking-tight">Weatherskies</span>
           </div>
           <div className="flex items-center gap-2 shrink-0 order-2 ml-auto lg:ml-0 lg:order-3">
