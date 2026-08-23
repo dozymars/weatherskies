@@ -193,7 +193,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
           <div className="flex items-center gap-2 text-slate-900 shrink-0">
             <Cloud className="w-6 h-6" strokeWidth={1.5} />
-            <span className="font-semibold tracking-tight hidden sm:block">Skyline</span>
+            <span className="font-semibold tracking-tight hidden sm:block">Weatherskies</span>
           </div>
           <div className="flex-1 flex items-center justify-center gap-3">
             <span className="text-slate-900 font-semibold text-sm tracking-tight whitespace-nowrap hidden sm:block">
