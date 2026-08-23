@@ -20,7 +20,7 @@ export default function EnvironmentPanel({ airData, newsData, newsLoading }) {
       <Tabs value={tab} onValueChange={setTab} className="w-full">
         <TabsList className="grid grid-cols-2 w-full bg-white border border-slate-200 h-auto">
           <TabsTrigger value="weather" className="flex items-center gap-1.5 text-xs py-1.5">
-            <CloudSun className="w-3.5 h-3.5 text-indigo-500" /> Weather
+            <CloudSun className="w-3.5 h-3.5 text-indigo-500" /> Weather News
           </TabsTrigger>
           <TabsTrigger value="air" className="flex items-center gap-1.5 text-xs py-1.5">
             <Wind className="w-3.5 h-3.5 text-sky-600" /> Air
