@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import WeatherSearch from "@/components/weather/WeatherSearch";
@@ -8,7 +8,6 @@ import DailyForecast from "@/components/weather/DailyForecast";
 import WeatherMap from "@/components/weather/WeatherMap";
 import AlertBanner from "@/components/weather/AlertBanner";
 import EnvironmentPanel from "@/components/weather/EnvironmentPanel";
-import { base44 } from "@/api/base44Client";
 import TempPrecipChart from "@/components/weather/TempPrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
@@ -59,13 +58,45 @@ function locationFromURL() {
   return null;
 }
 
+function alertsToNews(alerts) {
+  if (!alerts || !alerts.length) return [];
+  return alerts
+    .slice()
+    .sort(
+      (x, y) =>
+        new Date(y.onset || y.expires || 0) - new Date(x.onset || x.expires || 0)
+    )
+    .slice(0, 8)
+    .map((a) => {
+      const d = a.onset || a.expires;
+      let date = "";
+      if (d) {
+        try {
+          date = new Date(d).toLocaleString([], {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        } catch {}
+      }
+      return {
+        title: a.headline || a.event || "Weather Alert",
+        summary: a.description
+          ? a.description.split("\n\n")[0].slice(0, 220)
+          : a.instruction || "",
+        source: a.senderName || "NWS",
+        date,
+        locality: "local",
+        url: "",
+      };
+    });
+}
+
 export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
   const [forecast, setForecast] = useState(null);
   const [airData, setAirData] = useState(null);
-  const [newsData, setNewsData] = useState(null);
-  const [newsLoading, setNewsLoading] = useState(false);
-  const envRunId = useRef(0);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,44 +106,6 @@ export default function Home() {
   const loadData = useCallback(async (loc) => {
     setLoading(true);
     setError(null);
-    setNewsLoading(true);
-    setNewsData(null);
-    const myRunId = ++envRunId.current;
-    // Environmental data loads in parallel but does not block the forecast.
-    Promise.all([
-      base44.integrations.Core.InvokeLLM({
-        prompt: `Find the latest recent weather news headlines for ${loc.name} (latitude ${loc.latitude}, longitude ${loc.longitude}). Focus on severe weather events, storms, floods, heatwaves, droughts, wildfires, or unusual weather affecting this area in the past few weeks. Return up to 5 of the most recent and relevant items.`,
-        add_context_from_internet: true,
-        model: "gemini_3_flash",
-        response_json_schema: {
-          type: "object",
-          properties: {
-            articles: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  title: { type: "string" },
-                  summary: { type: "string" },
-                  source: { type: "string" },
-                  url: { type: "string" },
-                  date: { type: "string" },
-                },
-              },
-            },
-          },
-        },
-      })
-        .then((r) => r.articles || [])
-        .catch(() => null),
-    ])
-      .then(([n]) => {
-        if (myRunId !== envRunId.current) return;
-        setNewsData(n);
-      })
-      .finally(() => {
-        if (myRunId === envRunId.current) setNewsLoading(false);
-      });
     try {
       const [f, air, al] = await Promise.all([
         getForecast(loc.latitude, loc.longitude),
@@ -257,8 +250,8 @@ export default function Home() {
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
                 <EnvironmentPanel
                   airData={airData}
-                  newsData={newsData}
-                  newsLoading={newsLoading}
+                  newsData={alertsToNews(alerts)}
+                  newsLoading={false}
                 />
                 <WeatherMap location={location} />
               </div>
