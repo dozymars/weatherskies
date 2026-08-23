@@ -119,15 +119,15 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
             return (
               <div
                 key={s.label}
-                className="rounded-xl bg-white border border-slate-200 px-3 py-2"
+                className="rounded-xl bg-white border border-slate-200 px-3 py-2 min-w-0"
               >
                 <div className="flex items-center gap-1.5 text-slate-500 mb-1">
-                  <SIcon className="w-3 h-3" />
+                  <SIcon className="w-3 h-3 shrink-0" />
                   <span className="text-[10px] uppercase tracking-wider font-medium">
                     {s.label}
                   </span>
                 </div>
-                <div className="text-sm font-semibold text-slate-900">{s.value}</div>
+                <div className="text-sm font-semibold text-slate-900 break-words">{s.value}</div>
               </div>
             );
           })}

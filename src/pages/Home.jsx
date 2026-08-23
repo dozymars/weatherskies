@@ -187,7 +187,7 @@ export default function Home() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br ${bg} transition-colors duration-700`}
+      className={`min-h-screen bg-gradient-to-br ${bg} transition-colors duration-700 overflow-x-hidden`}
     >
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
@@ -242,7 +242,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
-              className="grid lg:grid-cols-2 gap-6 lg:gap-8"
+              className="grid lg:grid-cols-2 gap-4 lg:gap-8"
             >
               <div className="space-y-6">
                 <CurrentConditions
