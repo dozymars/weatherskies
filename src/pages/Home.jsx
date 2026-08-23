@@ -63,10 +63,8 @@ export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
   const [forecast, setForecast] = useState(null);
   const [airData, setAirData] = useState(null);
-  const [fireData, setFireData] = useState(null);
   const [newsData, setNewsData] = useState(null);
   const [newsLoading, setNewsLoading] = useState(false);
-  const [envLoading, setEnvLoading] = useState(false);
   const envRunId = useRef(0);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,20 +75,11 @@ export default function Home() {
   const loadData = useCallback(async (loc) => {
     setLoading(true);
     setError(null);
-    setEnvLoading(true);
     setNewsLoading(true);
-    setFireData(null);
     setNewsData(null);
     const myRunId = ++envRunId.current;
     // Environmental data loads in parallel but does not block the forecast.
     Promise.all([
-      base44.functions
-        .invoke("getFireData", {
-          latitude: loc.latitude,
-          longitude: loc.longitude,
-        })
-        .then((r) => r.data)
-        .catch(() => null),
       base44.integrations.Core.InvokeLLM({
         prompt: `Find the latest recent weather news headlines for ${loc.name} (latitude ${loc.latitude}, longitude ${loc.longitude}). Focus on severe weather events, storms, floods, heatwaves, droughts, wildfires, or unusual weather affecting this area in the past few weeks. Return up to 5 of the most recent and relevant items.`,
         add_context_from_internet: true,
@@ -117,16 +106,12 @@ export default function Home() {
         .then((r) => r.articles || [])
         .catch(() => null),
     ])
-      .then(([f, n]) => {
+      .then(([n]) => {
         if (myRunId !== envRunId.current) return;
-        setFireData(f);
         setNewsData(n);
       })
       .finally(() => {
-        if (myRunId === envRunId.current) {
-          setEnvLoading(false);
-          setNewsLoading(false);
-        }
+        if (myRunId === envRunId.current) setNewsLoading(false);
       });
     try {
       const [f, air, al] = await Promise.all([
@@ -272,8 +257,6 @@ export default function Home() {
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
                 <EnvironmentPanel
                   airData={airData}
-                  fireData={fireData}
-                  envLoading={envLoading}
                   newsData={newsData}
                   newsLoading={newsLoading}
                 />
@@ -284,9 +267,6 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
-      <footer className="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-center text-slate-400 text-xs">
-        Weather data by Open-Meteo · Alerts by NWS · AQI by Open-Meteo
-      </footer>
     </div>
   );
 }
