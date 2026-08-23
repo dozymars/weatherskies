@@ -193,7 +193,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-slate-900 shrink-0 order-1">
             <Cloud className="w-6 h-6" strokeWidth={1.5} />
-            <span className="font-semibold tracking-tight hidden lg:block">Weatherskies</span>
+            <span className="font-semibold tracking-tight">Weatherskies</span>
           </div>
           <div className="flex items-center gap-2 shrink-0 order-2 ml-auto lg:ml-0 lg:order-3">
             <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
