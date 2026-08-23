@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Wind, Droplets, Flame, CloudSun } from "lucide-react";
+import { Wind, Flame, CloudSun } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AirAtmosphere from "./AirAtmosphere";
-import WaterFlood from "./WaterFlood";
 import FireSmoke from "./FireSmoke";
 import WeatherNews from "./WeatherNews";
 
-export default function EnvironmentPanel({ airData, waterData, fireData, envLoading, newsData, newsLoading }) {
+export default function EnvironmentPanel({ airData, fireData, envLoading, newsData, newsLoading }) {
   const [tab, setTab] = useState("weather");
   return (
     <motion.div
@@ -20,15 +19,12 @@ export default function EnvironmentPanel({ airData, waterData, fireData, envLoad
         Environment
       </h3>
       <Tabs value={tab} onValueChange={setTab} className="w-full">
-        <TabsList className="grid grid-cols-4 w-full bg-white border border-slate-200 h-auto">
+        <TabsList className="grid grid-cols-3 w-full bg-white border border-slate-200 h-auto">
           <TabsTrigger value="weather" className="flex items-center gap-1.5 text-xs py-1.5">
             <CloudSun className="w-3.5 h-3.5 text-indigo-500" /> Weather
           </TabsTrigger>
           <TabsTrigger value="air" className="flex items-center gap-1.5 text-xs py-1.5">
             <Wind className="w-3.5 h-3.5 text-sky-600" /> Air
-          </TabsTrigger>
-          <TabsTrigger value="water" className="flex items-center gap-1.5 text-xs py-1.5">
-            <Droplets className="w-3.5 h-3.5 text-blue-600" /> Water
           </TabsTrigger>
           <TabsTrigger value="fire" className="flex items-center gap-1.5 text-xs py-1.5">
             <Flame className="w-3.5 h-3.5 text-orange-600" /> Fire
@@ -39,9 +35,6 @@ export default function EnvironmentPanel({ airData, waterData, fireData, envLoad
         </TabsContent>
         <TabsContent value="air" className="mt-4">
           <AirAtmosphere airData={airData} />
-        </TabsContent>
-        <TabsContent value="water" className="mt-4">
-          <WaterFlood waterData={waterData} loading={envLoading} />
         </TabsContent>
         <TabsContent value="fire" className="mt-4">
           <FireSmoke fireData={fireData} loading={envLoading} />

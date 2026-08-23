@@ -63,7 +63,6 @@ export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
   const [forecast, setForecast] = useState(null);
   const [airData, setAirData] = useState(null);
-  const [waterData, setWaterData] = useState(null);
   const [fireData, setFireData] = useState(null);
   const [newsData, setNewsData] = useState(null);
   const [newsLoading, setNewsLoading] = useState(false);
@@ -80,20 +79,11 @@ export default function Home() {
     setError(null);
     setEnvLoading(true);
     setNewsLoading(true);
-    setWaterData(null);
     setFireData(null);
     setNewsData(null);
     const myRunId = ++envRunId.current;
     // Environmental data loads in parallel but does not block the forecast.
     Promise.all([
-      base44.functions
-        .invoke("getWaterData", {
-          latitude: loc.latitude,
-          longitude: loc.longitude,
-          country: loc.country,
-        })
-        .then((r) => r.data)
-        .catch(() => null),
       base44.functions
         .invoke("getFireData", {
           latitude: loc.latitude,
@@ -127,9 +117,8 @@ export default function Home() {
         .then((r) => r.articles || [])
         .catch(() => null),
     ])
-      .then(([w, f, n]) => {
+      .then(([f, n]) => {
         if (myRunId !== envRunId.current) return;
-        setWaterData(w);
         setFireData(f);
         setNewsData(n);
       })
@@ -283,7 +272,6 @@ export default function Home() {
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
                 <EnvironmentPanel
                   airData={airData}
-                  waterData={waterData}
                   fireData={fireData}
                   envLoading={envLoading}
                   newsData={newsData}
