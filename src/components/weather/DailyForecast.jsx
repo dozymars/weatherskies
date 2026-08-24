@@ -35,6 +35,10 @@ export default function DailyForecast({ daily, hourly, timezone }) {
           const date = new Date(day);
           const isToday = i === 0;
           const dayLabel = isToday ? "Today" : DAYS[date.getDay()];
+          const dateLabel = date.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          });
           const max = maxes[i];
           const min = mins[i];
           const leftPct = ((min - globalMin) / range) * 100;
@@ -51,8 +55,13 @@ export default function DailyForecast({ daily, hourly, timezone }) {
                   isOpen ? "bg-slate-200" : "hover:bg-slate-200"
                 }`}
               >
-                <span className="text-sm font-medium text-slate-900 flex items-center gap-1">
-                  {dayLabel}
+                <span className="flex items-center gap-1">
+                  <span className="leading-tight">
+                    <span className="block text-sm font-medium text-slate-900">
+                      {dayLabel}
+                    </span>
+                    <span className="block text-[10px] text-slate-400">{dateLabel}</span>
+                  </span>
                   <ChevronDown
                     className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
                       isOpen ? "rotate-180" : ""
