@@ -6,8 +6,6 @@ import { usePreferences } from "@/lib/PreferencesContext";
 import { convertTemp, convertWind, windUnit } from "@/lib/units";
 import DayDetail from "./DayDetail";
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 export default function DailyForecast({ daily, hourly, timezone }) {
   const { units } = usePreferences();
   const [expandedDay, setExpandedDay] = useState(null);
@@ -32,12 +30,15 @@ export default function DailyForecast({ daily, hourly, timezone }) {
         {daily.time.map((day, i) => {
           const info = getWeatherInfo(daily.weather_code[i]);
           const Icon = info.icon;
-          const date = new Date(day);
+          const date = new Date(`${day}T12:00:00Z`);
           const isToday = i === 0;
-          const dayLabel = isToday ? "Today" : DAYS[date.getDay()];
+          const dayLabel = isToday
+            ? "Today"
+            : date.toLocaleDateString(undefined, { weekday: "short", timeZone: timezone });
           const dateLabel = date.toLocaleDateString(undefined, {
             month: "short",
             day: "numeric",
+            timeZone: timezone,
           });
           const max = maxes[i];
           const min = mins[i];
