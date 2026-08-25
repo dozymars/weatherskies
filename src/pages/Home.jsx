@@ -14,6 +14,7 @@ import UnitToggle from "@/components/weather/UnitToggle";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
 import { BACKGROUND_THEMES } from "@/lib/backgroundThemes";
 import BackgroundThemePicker from "@/components/weather/BackgroundThemePicker";
+import Footer from "@/components/Footer";
 import { usePreferences } from "@/lib/PreferencesContext";
 
 const DEFAULT_LOCATION = {
@@ -260,6 +261,7 @@ export default function Home() {
         </AnimatePresence>
       </main>
 
+      <Footer />
     </div>
   );
 }
