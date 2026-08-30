@@ -24,11 +24,8 @@ export default function WeatherNews({ newsData, loading }) {
   return (
     <div className="space-y-2">
       {newsData.map((a, i) => (
-        <a
+        <div
           key={i}
-          href={a.url || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
           className="block rounded-xl bg-white border border-slate-200 px-3 py-2 hover:border-slate-300 transition"
         >
           <div className="flex items-start gap-2">
@@ -47,10 +44,16 @@ export default function WeatherNews({ newsData, loading }) {
                     className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
                       a.locality === "local"
                         ? "bg-emerald-100 text-emerald-700"
-                        : "bg-sky-100 text-sky-700"
+                        : a.locality === "national"
+                        ? "bg-sky-100 text-sky-700"
+                        : "bg-amber-100 text-amber-700"
                     }`}
                   >
-                    {a.locality === "local" ? "Local" : "National"}
+                    {a.locality === "local"
+                      ? "Local"
+                      : a.locality === "national"
+                      ? "National"
+                      : "Global"}
                   </span>
                 )}
                 <span className="text-[11px] text-slate-400">
@@ -59,9 +62,9 @@ export default function WeatherNews({ newsData, loading }) {
               </div>
             </div>
           </div>
-        </a>
+        </div>
       ))}
-      <p className="text-[11px] text-slate-400 pt-1">Latest weather alerts via National Weather Service</p>
+      <p className="text-[11px] text-slate-400 pt-1">Top global weather &amp; disaster news — refreshed weekly</p>
     </div>
   );
 }

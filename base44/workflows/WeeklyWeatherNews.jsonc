@@ -1,0 +1,44 @@
+{
+  "name": "Weekly Weather News",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "weekly_weather_news",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "refresh": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "refreshWeatherNews"
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Refresh weather news",
+            "description": "Top 7 stories of the week"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * 0",
+      "one_time_date": null,
+      "timezone": "America/Toronto",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Refreshes the top 7 global weather/disaster news in the Weather News tab every Sunday at 9am (Toronto)"
+}

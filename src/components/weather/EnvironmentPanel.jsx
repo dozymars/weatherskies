@@ -4,8 +4,9 @@ import { Wind, CloudSun } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AirAtmosphere from "./AirAtmosphere";
 import WeatherNews from "./WeatherNews";
+import WeatherNewsRefresh from "./WeatherNewsRefresh";
 
-export default function EnvironmentPanel({ airData, newsData, newsLoading }) {
+export default function EnvironmentPanel({ airData, newsData, newsLoading, onRefreshed }) {
   const [tab, setTab] = useState("weather");
   return (
     <motion.div
@@ -27,6 +28,7 @@ export default function EnvironmentPanel({ airData, newsData, newsLoading }) {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="weather" className="mt-4">
+          <WeatherNewsRefresh onRefreshed={onRefreshed} />
           <WeatherNews newsData={newsData} loading={newsLoading} />
         </TabsContent>
         <TabsContent value="air" className="mt-4">

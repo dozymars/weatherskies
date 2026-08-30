@@ -15,6 +15,7 @@ import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi
 import { BACKGROUND_THEMES } from "@/lib/backgroundThemes";
 import BackgroundThemePicker from "@/components/weather/BackgroundThemePicker";
 import Footer from "@/components/Footer";
+import { base44 } from "@/api/base44Client";
 import { usePreferences } from "@/lib/PreferencesContext";
 
 const DEFAULT_LOCATION = {
@@ -59,46 +60,15 @@ function locationFromURL() {
   return null;
 }
 
-function alertsToNews(alerts) {
-  if (!alerts || !alerts.length) return [];
-  return alerts
-    .slice()
-    .sort(
-      (x, y) =>
-        new Date(y.onset || y.expires || 0) - new Date(x.onset || x.expires || 0)
-    )
-    .slice(0, 8)
-    .map((a) => {
-      const d = a.onset || a.expires;
-      let date = "";
-      if (d) {
-        try {
-          date = new Date(d).toLocaleString([], {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-        } catch {}
-      }
-      return {
-        title: a.headline || a.event || "Weather Alert",
-        summary: a.description
-          ? a.description.split("\n\n")[0].slice(0, 220)
-          : a.instruction || "",
-        source: a.senderName || "NWS",
-        date,
-        locality: "local",
-        url: "",
-      };
-    });
-}
+
 
 export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
   const [forecast, setForecast] = useState(null);
   const [airData, setAirData] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [newsData, setNewsData] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [locating, setLocating] = useState(false);
@@ -122,6 +92,35 @@ export default function Home() {
       setLoading(false);
     }
   }, []);
+
+  const loadNews = useCallback(async () => {
+    setNewsLoading(true);
+    try {
+      const posts = await base44.entities.WeatherPost.list("rank", 10);
+      setNewsData(
+        (posts || []).map((p) => ({
+          title: p.title,
+          summary: p.summary,
+          source: p.source,
+          date: p.story_date
+            ? new Date(`${p.story_date}T12:00:00Z`).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+              })
+            : "",
+          locality: p.locality || "global",
+        }))
+      );
+    } catch {
+      setNewsData([]);
+    } finally {
+      setNewsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNews();
+  }, [loadNews]);
 
   useEffect(() => {
     // Clean share params from the URL after applying them
@@ -251,8 +250,9 @@ export default function Home() {
                 <DailyForecast daily={forecast.daily} hourly={forecast.hourly} timezone={forecast.timezone} />
                 <EnvironmentPanel
                   airData={airData}
-                  newsData={alertsToNews(alerts)}
-                  newsLoading={false}
+                  newsData={newsData}
+                  newsLoading={newsLoading}
+                  onRefreshed={loadNews}
                 />
                 <WeatherMap location={location} />
               </div>

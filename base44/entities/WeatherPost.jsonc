@@ -1,0 +1,33 @@
+{
+  "name": "WeatherPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "story_date": {
+      "type": "string"
+    },
+    "locality": {
+      "type": "string",
+      "enum": [
+        "global",
+        "local",
+        "national"
+      ],
+      "default": "global"
+    },
+    "rank": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}
