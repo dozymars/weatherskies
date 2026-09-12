@@ -6,10 +6,10 @@ import { ACTIVITIES, scoreAllDays, bestDayForActivity } from "@/lib/activityScor
 const SCORE_COLORS = ["", "#ef4444", "#f97316", "#eab308", "#84cc16", "#22c55e"];
 
 const ACTIVITY_META = {
-  running: { icon: Footprints, label: "Running" },
-  beach: { icon: Umbrella, label: "Beach" },
-  skiing: { icon: Snowflake, label: "Skiing" },
-  gardening: { icon: Sprout, label: "Gardening" },
+  running: { icon: Footprints, label: "Running", card: "bg-orange-50 border-orange-200", iconColor: "text-orange-500", labelColor: "text-orange-700", pill: "bg-orange-100 text-orange-700" },
+  beach: { icon: Umbrella, label: "Beach", card: "bg-sky-50 border-sky-200", iconColor: "text-sky-500", labelColor: "text-sky-700", pill: "bg-sky-100 text-sky-700" },
+  skiing: { icon: Snowflake, label: "Skiing", card: "bg-cyan-50 border-cyan-200", iconColor: "text-cyan-500", labelColor: "text-cyan-700", pill: "bg-cyan-100 text-cyan-700" },
+  gardening: { icon: Sprout, label: "Gardening", card: "bg-emerald-50 border-emerald-200", iconColor: "text-emerald-500", labelColor: "text-emerald-700", pill: "bg-emerald-100 text-emerald-700" },
 };
 
 function ScoreBar({ score }) {
@@ -67,15 +67,14 @@ export default function ActivityIndexGrid({ daily, timezone }) {
           return (
             <div
               key={a.key}
-              className="rounded-2xl bg-slate-50 border border-slate-200 px-2 py-3 text-center"
+              className={`rounded-2xl border px-2 py-3 text-center ${ACTIVITY_META[a.key].card}`}
             >
-              <Icon className="w-5 h-5 mx-auto text-slate-700 mb-1" />
-              <div className="text-[11px] font-medium text-slate-700">
+              <Icon className={`w-5 h-5 mx-auto mb-1 ${ACTIVITY_META[a.key].iconColor}`} />
+              <div className={`text-[11px] font-medium ${ACTIVITY_META[a.key].labelColor}`}>
                 {ACTIVITY_META[a.key].label}
               </div>
               <div
-                className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
-                style={{ background: "#e0f2fe", color: "#0369a1" }}
+                className={`mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${ACTIVITY_META[a.key].pill}`}
               >
                 <CalendarDays className="w-2.5 h-2.5" /> {bestDate}
               </div>
