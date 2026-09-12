@@ -3,16 +3,8 @@ import { motion } from "framer-motion";
 import { Sunrise, Sunset, Sun, Droplets, Wind, Thermometer } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp, tempUnit, convertWind, windUnit } from "@/lib/units";
-
-function uvLabel(uv) {
-  if (uv == null) return "—";
-  if (uv < 3) return "Low";
-  if (uv < 6) return "Moderate";
-  if (uv < 8) return "High";
-  if (uv < 11) return "Very High";
-  return "Extreme";
-}
 
 function toCardinal(deg) {
   const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
@@ -21,6 +13,7 @@ function toCardinal(deg) {
 
 export default function DayDetail({ dayIndex, daily, hourly }) {
   const { units } = usePreferences();
+  const { t, locale } = useLanguage();
   const dateStr = daily.time[dayIndex];
 
   const dayHours = [];
@@ -40,34 +33,43 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
   const appMax = daily.apparent_temperature_max?.[dayIndex];
   const appMin = daily.apparent_temperature_min?.[dayIndex];
 
+  function uvText(uv) {
+    if (uv == null) return "—";
+    if (uv < 3) return t("uv.low");
+    if (uv < 6) return t("uv.moderate");
+    if (uv < 8) return t("uv.high");
+    if (uv < 11) return t("uv.veryHigh");
+    return t("uv.extreme");
+  }
+
   const stats = [
-    { icon: Sun, label: "UV Index", value: uv != null ? `${Math.round(uv)} · ${uvLabel(uv)}` : "—" },
+    { icon: Sun, label: t("dayDetail.uvIndex"), value: uv != null ? `${Math.round(uv)} · ${uvText(uv)}` : "—" },
     {
       icon: Droplets,
-      label: "Precipitation",
+      label: t("current.precipitation"),
       value: precipSum != null ? `${precipSum.toFixed(1)} mm · ${pop}%` : `${pop}%`,
     },
     {
       icon: Wind,
-      label: "Wind",
+      label: t("current.wind"),
       value: `${Math.round(convertWind(windMax ?? 0, units))} ${windUnit(units)}${windDir != null ? " " + toCardinal(windDir) : ""}`,
     },
     {
       icon: Thermometer,
-      label: "Feels Like",
+      label: t("current.feelsLike"),
       value: appMax != null
         ? `${Math.round(convertTemp(appMin, units))}° / ${Math.round(convertTemp(appMax, units))}°`
         : "—",
     },
     {
       icon: Sunrise,
-      label: "Sunrise",
-      value: sunrise ? new Date(sunrise).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—",
+      label: t("current.sunrise"),
+      value: sunrise ? new Date(sunrise).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }) : "—",
     },
     {
       icon: Sunset,
-      label: "Sunset",
-      value: sunset ? new Date(sunset).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—",
+      label: t("current.sunset"),
+      value: sunset ? new Date(sunset).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }) : "—",
     },
   ];
 
@@ -83,20 +85,20 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
         {dayHours.length > 0 && (
           <div>
             <p className="text-[11px] uppercase tracking-wider text-slate-400 mb-2 font-medium">
-              Hourly
+              {t("dayDetail.hourly")}
             </p>
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
               {dayHours.map((k) => {
                 const info = getWeatherInfo(hourly.weather_code[k]);
                 const Icon = info.icon;
-                const t = new Date(hourly.time[k]);
+                const tm = new Date(hourly.time[k]);
                 return (
                   <div
                     key={k}
                     className="flex flex-col items-center gap-1 min-w-[52px] rounded-xl bg-white border border-slate-200 px-2 py-2"
                   >
                     <span className="text-[10px] text-slate-500">
-                      {t.toLocaleTimeString([], { hour: "numeric" })}
+                      {tm.toLocaleTimeString(locale, { hour: "numeric" })}
                     </span>
                     <Icon className={`w-5 h-5 ${info.color}`} strokeWidth={1.5} />
                     <span className="text-xs font-semibold text-slate-900">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const SEVERITY_STYLES = {
   Extreme: { bg: "bg-red-600/90", border: "border-red-300" },
@@ -10,6 +11,7 @@ const SEVERITY_STYLES = {
 };
 
 export default function AlertBanner({ alerts }) {
+  const { t, locale } = useLanguage();
   const [expanded, setExpanded] = useState(false);
   if (!alerts || !alerts.length) return null;
   const top = alerts[0];
@@ -29,7 +31,7 @@ export default function AlertBanner({ alerts }) {
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate">{top.event}</div>
           <div className="text-xs text-white/80 truncate">
-            {top.headline || top.senderName || "Active alert"}
+            {top.headline || top.senderName || t("alert.active")}
           </div>
         </div>
         {alerts.length > 1 && (
@@ -56,9 +58,9 @@ export default function AlertBanner({ alerts }) {
                 <div key={i} className="border-t border-white/20 pt-3">
                   <div className="text-sm font-semibold">{a.event}</div>
                   <div className="text-xs text-white/80 mb-1">
-                    Issued by {a.senderName || "NWS"}
+                    {t("alert.issuedBy", { name: a.senderName || t("alert.nws") })}
                     {a.expires &&
-                      ` · Until ${new Date(a.expires).toLocaleString()}`}
+                      ` · ${t("alert.until", { date: new Date(a.expires).toLocaleString(locale) })}`}
                   </div>
                   {a.description && (
                     <p className="text-xs text-white/90 whitespace-pre-line">

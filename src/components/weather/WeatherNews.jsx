@@ -1,7 +1,9 @@
 import React from "react";
 import { Newspaper, ExternalLink } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function WeatherNews({ newsData, loading }) {
+  const { t } = useLanguage();
   if (loading) {
     return (
       <div className="space-y-2">
@@ -13,12 +15,12 @@ export default function WeatherNews({ newsData, loading }) {
   }
   if (!newsData) {
     return (
-      <p className="text-sm text-slate-400 py-6 text-center">Unable to load weather news.</p>
+      <p className="text-sm text-slate-400 py-6 text-center">{t("news.unable")}</p>
     );
   }
   if (newsData.length === 0) {
     return (
-      <p className="text-sm text-slate-500 py-6 text-center">No recent weather news found.</p>
+      <p className="text-sm text-slate-500 py-6 text-center">{t("news.empty")}</p>
     );
   }
   return (
@@ -50,10 +52,10 @@ export default function WeatherNews({ newsData, loading }) {
                     }`}
                   >
                     {a.locality === "local"
-                      ? "Local"
+                      ? t("news.local")
                       : a.locality === "national"
-                      ? "National"
-                      : "Global"}
+                      ? t("news.national")
+                      : t("news.global")}
                   </span>
                 )}
                 <span className="text-[11px] text-slate-400">
@@ -64,7 +66,7 @@ export default function WeatherNews({ newsData, loading }) {
           </div>
         </div>
       ))}
-      <p className="text-[11px] text-slate-400 pt-1">Top global weather &amp; disaster news — refreshed weekly</p>
+      <p className="text-[11px] text-slate-400 pt-1">{t("news.footer")}</p>
     </div>
   );
 }

@@ -3,10 +3,13 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail } from "lucide-react";
 import Footer from "@/components/Footer";
+import LanguageSwitcher from "@/components/weather/LanguageSwitcher";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const CONTACT_EMAIL = "hello@weatherskies.app";
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -18,14 +21,14 @@ export default function Contact() {
     setStatus("sending");
     setError("");
     try {
-      const subject = `Weatherskies contact from ${name || "a visitor"}`;
-      const body = `Name: ${name || "—"}\nEmail: ${email || "—"}\n\n${message}`;
+      const subject = t("contact.subjectPrefix", { name: name || t("contact.visitor") });
+      const body = `${t("contact.name")}: ${name || "—"}\n${t("contact.email")}: ${email || "—"}\n\n${message}`;
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
         subject
       )}&body=${encodeURIComponent(body)}`;
       setStatus("sent");
     } catch {
-      setError("Something went wrong. Please email us directly.");
+      setError(t("contact.error"));
       setStatus("error");
     }
   }
@@ -40,12 +43,15 @@ export default function Contact() {
             className="w-7 h-7 rounded-lg object-cover"
           />
           <span className="font-semibold tracking-tight text-slate-900">Weatherskies</span>
-          <Link
-            to="/"
-            className="ml-auto flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to app
-          </Link>
+          <div className="ml-auto flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              to="/"
+              className="flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition"
+            >
+              <ArrowLeft className="w-4 h-4" /> {t("nav.backToApp")}
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -56,12 +62,9 @@ export default function Contact() {
         className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16 flex-1 w-full"
       >
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-4">
-          Contact Us
+          {t("contact.title")}
         </h1>
-        <p className="text-slate-600 leading-relaxed mb-8">
-          Have a question, feedback, or found an issue with Weatherskies? We'd love to
-          hear from you. Fill out the form below or reach us directly by email.
-        </p>
+        <p className="text-slate-600 leading-relaxed mb-8">{t("contact.intro")}</p>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 mb-6">
           <a
@@ -76,31 +79,31 @@ export default function Contact() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Name
+              {t("contact.name")}
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
-              placeholder="Your name"
+              placeholder={t("contact.namePh")}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Email
+              {t("contact.email")}
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
-              placeholder="you@example.com"
+              placeholder={t("contact.emailPh")}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Message
+              {t("contact.message")}
             </label>
             <textarea
               value={message}
@@ -108,21 +111,19 @@ export default function Contact() {
               required
               rows={5}
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300 resize-none"
-              placeholder="How can we help?"
+              placeholder={t("contact.messagePh")}
             />
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
           {status === "sent" ? (
-            <p className="text-sm text-green-600">
-              Your email app should have opened — thanks for reaching out!
-            </p>
+            <p className="text-sm text-green-600">{t("contact.sent")}</p>
           ) : (
             <button
               type="submit"
               disabled={status === "sending"}
               className="px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-700 disabled:opacity-50 text-white text-sm font-medium transition"
             >
-              {status === "sending" ? "Opening…" : "Send Message"}
+              {status === "sending" ? t("contact.opening") : t("contact.send")}
             </button>
           )}
         </form>

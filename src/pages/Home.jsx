@@ -12,6 +12,8 @@ import EnvironmentPanel from "@/components/weather/EnvironmentPanel";
 import TempPrecipChart from "@/components/weather/TempPrecipChart";
 import SavedLocationsDropdown from "@/components/weather/SavedLocationsDropdown";
 import UnitToggle from "@/components/weather/UnitToggle";
+import LanguageSwitcher from "@/components/weather/LanguageSwitcher";
+import { useLanguage } from "@/lib/LanguageContext";
 import { getForecast, getAQI, getAlerts, reverseGeocode } from "@/lib/weatherApi";
 import { BACKGROUND_THEMES } from "@/lib/backgroundThemes";
 import BackgroundThemePicker from "@/components/weather/BackgroundThemePicker";
@@ -74,6 +76,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [locating, setLocating] = useState(false);
   const { backgroundTheme, setBackgroundTheme } = usePreferences();
+  const { t } = useLanguage();
 
   const loadData = useCallback(async (loc) => {
     setLoading(true);
@@ -88,7 +91,7 @@ export default function Home() {
       setAirData(air);
       setAlerts(al);
     } catch (e) {
-      setError("Unable to load forecast. Please try again.");
+      setError("error.forecast");
     } finally {
       setLoading(false);
     }
@@ -194,11 +197,12 @@ export default function Home() {
               to="/lifestyle"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 hover:bg-sky-50 border border-slate-200 transition"
             >
-              <Sparkles className="w-3.5 h-3.5" /> Lifestyle
+              <Sparkles className="w-3.5 h-3.5" /> {t("nav.lifestyle")}
             </Link>
             <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
             <BackgroundThemePicker value={backgroundTheme} onChange={setBackgroundTheme} />
             <UnitToggle />
+            <LanguageSwitcher />
           </div>
           <div className="order-3 lg:order-2 basis-full lg:basis-0 flex-1 flex items-center justify-start lg:justify-center gap-3">
             <span className="text-slate-900 font-semibold text-sm tracking-tight whitespace-nowrap hidden lg:block">
@@ -224,16 +228,16 @@ export default function Home() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-32 text-slate-500">
               <Loader2 className="w-8 h-8 animate-spin mb-3" />
-              <p className="text-sm">Loading forecast…</p>
+              <p className="text-sm">{t("loading.forecast")}</p>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-32 text-slate-900">
-              <p className="text-base mb-3">{error}</p>
+              <p className="text-base mb-3">{t(error)}</p>
               <button
                 onClick={() => loadData(location)}
                 className="px-5 py-2 rounded-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium transition"
               >
-                Retry
+                {t("error.retry")}
               </button>
             </div>
           ) : (

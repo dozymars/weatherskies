@@ -3,8 +3,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
+import LanguageSwitcher from "@/components/weather/LanguageSwitcher";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function About() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-slate-100 flex flex-col">
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-md border-b border-slate-200">
@@ -15,12 +18,15 @@ export default function About() {
             className="w-7 h-7 rounded-lg object-cover"
           />
           <span className="font-semibold tracking-tight text-slate-900">Weatherskies</span>
-          <Link
-            to="/"
-            className="ml-auto flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to app
-          </Link>
+          <div className="ml-auto flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              to="/"
+              className="flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900 transition"
+            >
+              <ArrowLeft className="w-4 h-4" /> {t("nav.backToApp")}
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -31,37 +37,13 @@ export default function About() {
         className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 flex-1 w-full"
       >
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-6">
-          About Weatherskies
+          {t("about.title")}
         </h1>
         <div className="space-y-5 text-slate-700 leading-relaxed">
-          <p>
-            Weatherskies is a clean, fast, and reliable weather application designed to
-            give you an accurate picture of conditions wherever you are. From a single
-            dashboard you get the current temperature, real-feel, humidity, wind,
-            pressure, and precipitation, alongside an hourly outlook for the next 24
-            hours and a detailed 10-day forecast. Each day expands to reveal the UV
-            index, sunrise and sunset times, precipitation chance, and wind direction,
-            so you can plan with confidence.
-          </p>
-          <p>
-            Weatherskies also keeps an eye on the bigger picture. An Environment panel
-            surfaces local air quality, atmospheric pollutants, and nearby weather
-            alerts, while an interactive map lets you visualize your selected location
-            at a glance. Save your favorite cities, switch between metric and imperial
-            units, and choose a background theme that suits your mood — your
-            preferences are remembered between visits.
-          </p>
-          <p>
-            Weatherskies is built for everyone who needs dependable weather
-            information: commuters timing their morning, travelers exploring new
-            cities, parents planning outdoor activities, and outdoor enthusiasts
-            tracking conditions for hiking, running, or cycling.
-          </p>
-          <p>
-            Weatherskies is built and maintained on the Base44 platform, combining
-            trusted public weather data sources with a focus on clarity, speed, and a
-            distraction-free experience.
-          </p>
+          <p>{t("about.p1")}</p>
+          <p>{t("about.p2")}</p>
+          <p>{t("about.p3")}</p>
+          <p>{t("about.p4")}</p>
         </div>
       </motion.main>
 

@@ -2,14 +2,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Footprints, Umbrella, Snowflake, Sprout, CalendarDays } from "lucide-react";
 import { ACTIVITIES, scoreAllDays, bestDayForActivity } from "@/lib/activityScores";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const SCORE_COLORS = ["", "#ef4444", "#f97316", "#eab308", "#84cc16", "#22c55e"];
 
 const ACTIVITY_META = {
-  running: { icon: Footprints, label: "Running", card: "bg-orange-50 border-orange-200", iconColor: "text-orange-500", labelColor: "text-orange-700", pill: "bg-orange-100 text-orange-700" },
-  beach: { icon: Umbrella, label: "Beach", card: "bg-sky-50 border-sky-200", iconColor: "text-sky-500", labelColor: "text-sky-700", pill: "bg-sky-100 text-sky-700" },
-  skiing: { icon: Snowflake, label: "Skiing", card: "bg-cyan-50 border-cyan-200", iconColor: "text-cyan-500", labelColor: "text-cyan-700", pill: "bg-cyan-100 text-cyan-700" },
-  gardening: { icon: Sprout, label: "Gardening", card: "bg-emerald-50 border-emerald-200", iconColor: "text-emerald-500", labelColor: "text-emerald-700", pill: "bg-emerald-100 text-emerald-700" },
+  running: { icon: Footprints, key: "activity.running", card: "bg-orange-50 border-orange-200", iconColor: "text-orange-500", labelColor: "text-orange-700", pill: "bg-orange-100 text-orange-700" },
+  beach: { icon: Umbrella, key: "activity.beach", card: "bg-sky-50 border-sky-200", iconColor: "text-sky-500", labelColor: "text-sky-700", pill: "bg-sky-100 text-sky-700" },
+  skiing: { icon: Snowflake, key: "activity.skiing", card: "bg-cyan-50 border-cyan-200", iconColor: "text-cyan-500", labelColor: "text-cyan-700", pill: "bg-cyan-100 text-cyan-700" },
+  gardening: { icon: Sprout, key: "activity.gardening", card: "bg-emerald-50 border-emerald-200", iconColor: "text-emerald-500", labelColor: "text-emerald-700", pill: "bg-emerald-100 text-emerald-700" },
 };
 
 function ScoreBar({ score }) {
@@ -35,6 +36,7 @@ function ScoreBar({ score }) {
 }
 
 export default function ActivityIndexGrid({ daily, timezone }) {
+  const { t, locale } = useLanguage();
   if (!daily || !daily.time) return null;
   const days = scoreAllDays(daily);
   const bestDays = {};
@@ -49,17 +51,18 @@ export default function ActivityIndexGrid({ daily, timezone }) {
       transition={{ duration: 0.5 }}
       className="rounded-3xl bg-white/85 backdrop-blur-md border border-slate-200 p-5 sm:p-6 h-full"
     >
-      <h3 className="text-slate-800 text-base font-semibold">Activity-Friendly Index</h3>
+      <h3 className="text-slate-800 text-base font-semibold">{t("lifestyle.activityIndex")}</h3>
       <p className="text-[11px] text-slate-500 mb-4 uppercase tracking-wider">
-        Best day this week per activity
+        {t("lifestyle.bestDayWeek")}
       </p>
 
       <div className="grid grid-cols-4 gap-2 mb-5">
         {ACTIVITIES.map((a) => {
-          const Icon = ACTIVITY_META[a.key].icon;
+          const meta = ACTIVITY_META[a.key];
+          const Icon = meta.icon;
           const best = bestDays[a.key];
           const bestDate = best
-            ? new Date(`${best.date}T12:00:00Z`).toLocaleDateString(undefined, {
+            ? new Date(`${best.date}T12:00:00Z`).toLocaleDateString(locale, {
                 weekday: "short",
                 timeZone: timezone,
               })
@@ -67,14 +70,14 @@ export default function ActivityIndexGrid({ daily, timezone }) {
           return (
             <div
               key={a.key}
-              className={`rounded-2xl border px-2 py-3 text-center ${ACTIVITY_META[a.key].card}`}
+              className={`rounded-2xl border px-2 py-3 text-center ${meta.card}`}
             >
-              <Icon className={`w-5 h-5 mx-auto mb-1 ${ACTIVITY_META[a.key].iconColor}`} />
-              <div className={`text-[11px] font-medium ${ACTIVITY_META[a.key].labelColor}`}>
-                {ACTIVITY_META[a.key].label}
+              <Icon className={`w-5 h-5 mx-auto mb-1 ${meta.iconColor}`} />
+              <div className={`text-[11px] font-medium ${meta.labelColor}`}>
+                {t(meta.key)}
               </div>
               <div
-                className={`mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${ACTIVITY_META[a.key].pill}`}
+                className={`mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${meta.pill}`}
               >
                 <CalendarDays className="w-2.5 h-2.5" /> {bestDate}
               </div>
@@ -86,10 +89,10 @@ export default function ActivityIndexGrid({ daily, timezone }) {
       <div className="overflow-x-auto -mx-2 px-2">
         <div className="min-w-[440px]">
           <div className="grid grid-cols-[64px_repeat(4,1fr)] gap-2 text-[10px] uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-100">
-            <div>Day</div>
+            <div>{t("lifestyle.day")}</div>
             {ACTIVITIES.map((a) => (
               <div key={a.key} className="text-center">
-                {ACTIVITY_META[a.key].label}
+                {t(ACTIVITY_META[a.key].key)}
               </div>
             ))}
           </div>
@@ -97,9 +100,9 @@ export default function ActivityIndexGrid({ daily, timezone }) {
             const d = new Date(`${day.date}T12:00:00Z`);
             const label =
               i === 0
-                ? "Today"
-                : d.toLocaleDateString(undefined, { weekday: "short", timeZone: timezone });
-            const dateStr = d.toLocaleDateString(undefined, {
+                ? t("daily.today")
+                : d.toLocaleDateString(locale, { weekday: "short", timeZone: timezone });
+            const dateStr = d.toLocaleDateString(locale, {
               month: "short",
               day: "numeric",
               timeZone: timezone,

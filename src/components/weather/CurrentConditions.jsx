@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { MapPin, Wind, Droplets, Gauge, Eye, Sunrise, Sunset, Thermometer } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp, tempUnit, convertWind, windUnit } from "@/lib/units";
 import SaveLocationButton from "./SaveLocationButton";
 import ShareButton from "./ShareButton";
@@ -14,6 +15,7 @@ function toCardinal(deg) {
 
 export default function CurrentConditions({ location, current, daily }) {
   const { units } = usePreferences();
+  const { t, tw, locale } = useLanguage();
   const info = getWeatherInfo(current.weather_code);
   const Icon = info.icon;
   const sunrise = daily?.sunrise?.[0];
@@ -22,47 +24,47 @@ export default function CurrentConditions({ location, current, daily }) {
   const details = [
     {
       icon: Thermometer,
-      label: "Feels Like",
+      label: t("current.feelsLike"),
       value: `${Math.round(convertTemp(current.apparent_temperature, units))}${tempUnit(units)}`,
       accent: { card: "bg-orange-50 border-orange-200", icon: "text-orange-500" },
     },
     {
       icon: Droplets,
-      label: "Humidity",
+      label: t("current.humidity"),
       value: `${current.relative_humidity_2m}%`,
       accent: { card: "bg-sky-50 border-sky-200", icon: "text-sky-500" },
     },
     {
       icon: Wind,
-      label: "Wind",
+      label: t("current.wind"),
       value: `${Math.round(convertWind(current.wind_speed_10m, units))} ${windUnit(units)} ${toCardinal(current.wind_direction_10m)}`,
       accent: { card: "bg-teal-50 border-teal-200", icon: "text-teal-500" },
     },
     {
       icon: Gauge,
-      label: "Pressure",
+      label: t("current.pressure"),
       value: `${Math.round(current.pressure_msl)} hPa`,
       accent: { card: "bg-violet-50 border-violet-200", icon: "text-violet-500" },
     },
     {
       icon: Eye,
-      label: "Precipitation",
+      label: t("current.precipitation"),
       value: `${(current.precipitation ?? 0).toFixed(1)} mm`,
       accent: { card: "bg-blue-50 border-blue-200", icon: "text-blue-500" },
     },
     {
       icon: Sunrise,
-      label: "Sunrise",
+      label: t("current.sunrise"),
       value: sunrise
-        ? new Date(sunrise).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        ? new Date(sunrise).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
         : "—",
       accent: { card: "bg-amber-50 border-amber-200", icon: "text-amber-500" },
     },
     {
       icon: Sunset,
-      label: "Sunset",
+      label: t("current.sunset"),
       value: sunset
-        ? new Date(sunset).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        ? new Date(sunset).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })
         : "—",
       accent: { card: "bg-indigo-50 border-indigo-200", icon: "text-indigo-500" },
     },
@@ -88,13 +90,13 @@ export default function CurrentConditions({ location, current, daily }) {
         </div>
       </div>
       <p className="text-xs text-slate-400 mb-6">
-        {new Date().toLocaleDateString(undefined, {
+        {new Date().toLocaleDateString(locale, {
           weekday: "long",
           month: "long",
           day: "numeric",
         })}{" "}
         ·{" "}
-        {new Date().toLocaleTimeString([], {
+        {new Date().toLocaleTimeString(locale, {
           hour: "2-digit",
           minute: "2-digit",
         })}
@@ -115,7 +117,7 @@ export default function CurrentConditions({ location, current, daily }) {
             </span>
             <span className="text-3xl font-light mt-2 ml-1">{tempUnit(units)}</span>
           </div>
-          <p className="text-lg font-medium text-slate-700 mt-1">{info.label}</p>
+          <p className="text-lg font-medium text-slate-700 mt-1">{tw(current.weather_code)}</p>
         </div>
       </div>
 

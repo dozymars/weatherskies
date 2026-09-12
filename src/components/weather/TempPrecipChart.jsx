@@ -12,9 +12,10 @@ import {
 } from "recharts";
 import { Thermometer, Droplets } from "lucide-react";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp, tempUnit } from "@/lib/units";
 
-function ChartTooltip({ active, payload, label, units }) {
+function ChartTooltip({ active, payload, label, units, t }) {
   if (!active || !payload || !payload.length) return null;
   const temp = payload.find((p) => p.dataKey === "temp");
   const pop = payload.find((p) => p.dataKey === "pop");
@@ -30,7 +31,7 @@ function ChartTooltip({ active, payload, label, units }) {
       {pop && (
         <div className="flex items-center gap-1.5 text-slate-700">
           <Droplets className="w-3 h-3 text-sky-500" />
-          <span>{pop.value}% precip</span>
+          <span>{t("chart.precipTooltip", { n: pop.value })}</span>
         </div>
       )}
     </div>
@@ -39,6 +40,7 @@ function ChartTooltip({ active, payload, label, units }) {
 
 export default function TempPrecipChart({ hourly }) {
   const { units } = usePreferences();
+  const { t, locale } = useLanguage();
   if (!hourly) return null;
   const now = new Date();
   const times = hourly.time.map((t) => new Date(t));
@@ -48,7 +50,7 @@ export default function TempPrecipChart({ hourly }) {
   const data = Array.from({ length: 24 }, (_, i) => startIdx + i)
     .filter((i) => i < hourly.time.length)
     .map((i) => ({
-      time: new Date(hourly.time[i]).toLocaleTimeString([], { hour: "numeric" }),
+      time: new Date(hourly.time[i]).toLocaleTimeString(locale, { hour: "numeric" }),
       temp: Math.round(convertTemp(hourly.temperature_2m[i], units)),
       pop: hourly.precipitation_probability?.[i] ?? 0,
     }));
@@ -62,16 +64,16 @@ export default function TempPrecipChart({ hourly }) {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-slate-700 text-sm font-semibold uppercase tracking-wider">
-          Next 24 Hours
+          {t("chart.next24")}
         </h3>
         <div className="flex items-center gap-4 text-xs">
           <span className="flex items-center gap-1.5 text-slate-600">
             <span className="inline-block w-3 h-0.5 rounded bg-orange-500" />
-            Temp
+            {t("chart.temp")}
           </span>
           <span className="flex items-center gap-1.5 text-slate-600">
             <span className="inline-block w-3 h-3 rounded-sm bg-sky-400" />
-            Precip %
+            {t("chart.precipPct")}
           </span>
         </div>
       </div>
@@ -109,7 +111,7 @@ export default function TempPrecipChart({ hourly }) {
             tickFormatter={(v) => `${v}%`}
           />
           <Tooltip
-            content={<ChartTooltip units={units} />}
+            content={<ChartTooltip units={units} t={t} />}
             cursor={{ fill: "rgba(148,163,184,0.12)" }}
           />
           <Bar

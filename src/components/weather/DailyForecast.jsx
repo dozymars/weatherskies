@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Droplets, Wind, ChevronDown } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp, convertWind, windUnit } from "@/lib/units";
 import DayDetail from "./DayDetail";
 
 export default function DailyForecast({ daily, hourly, timezone }) {
   const { units } = usePreferences();
+  const { t, locale } = useLanguage();
   const [expandedDay, setExpandedDay] = useState(null);
   if (!daily) return null;
   const maxes = daily.temperature_2m_max.map((c) => convertTemp(c, units));
@@ -24,7 +26,7 @@ export default function DailyForecast({ daily, hourly, timezone }) {
       className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6"
     >
       <h3 className="text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
-        10-Day Forecast
+        {t("daily.title")}
       </h3>
       <div className="flex flex-col">
         {daily.time.map((day, i) => {
@@ -33,9 +35,9 @@ export default function DailyForecast({ daily, hourly, timezone }) {
           const date = new Date(`${day}T12:00:00Z`);
           const isToday = i === 0;
           const dayLabel = isToday
-            ? "Today"
-            : date.toLocaleDateString(undefined, { weekday: "short", timeZone: timezone });
-          const dateLabel = date.toLocaleDateString(undefined, {
+            ? t("daily.today")
+            : date.toLocaleDateString(locale, { weekday: "short", timeZone: timezone });
+          const dateLabel = date.toLocaleDateString(locale, {
             month: "short",
             day: "numeric",
             timeZone: timezone,
@@ -108,7 +110,7 @@ export default function DailyForecast({ daily, hourly, timezone }) {
           );
         })}
       </div>
-      <p className="text-[11px] text-slate-400 mt-2 text-right">Wind in {windUnit(units)}</p>
+      <p className="text-[11px] text-slate-400 mt-2 text-right">{t("daily.windInUnit", { unit: windUnit(units) })}</p>
     </motion.div>
   );
 }

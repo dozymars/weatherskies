@@ -40,6 +40,7 @@ export default async function(req) {
       source: String(a.source || "News"),
       story_date: String(a.story_date || new Date().toISOString().slice(0, 10)),
       locality: "global",
+      language: "en",
       rank: a.rank != null ? Number(a.rank) : i + 1
     }));
 

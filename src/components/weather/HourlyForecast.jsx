@@ -3,10 +3,12 @@ import { motion } from "framer-motion";
 import { Droplets } from "lucide-react";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp } from "@/lib/units";
 
 export default function HourlyForecast({ hourly, timezone }) {
   const { units } = usePreferences();
+  const { t, locale } = useLanguage();
   if (!hourly) return null;
   const now = new Date();
   const times = hourly.time.map((t) => new Date(t));
@@ -24,7 +26,7 @@ export default function HourlyForecast({ hourly, timezone }) {
       className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6"
     >
       <h3 className="text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
-        Hourly Forecast
+        {t("hourly.title")}
       </h3>
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-thin">
         {hours.map((idx, i) => {
@@ -40,7 +42,7 @@ export default function HourlyForecast({ hourly, timezone }) {
               }`}
             >
               <span className="text-xs font-medium text-slate-500">
-                {isNow ? "Now" : time.toLocaleTimeString([], { hour: "numeric" })}
+                {isNow ? t("hourly.now") : time.toLocaleTimeString(locale, { hour: "numeric" })}
               </span>
               <Icon className={`w-7 h-7 ${info.color}`} strokeWidth={1.5} />
               <span className="text-base font-semibold text-slate-900">

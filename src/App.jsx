@@ -12,6 +12,7 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import Lifestyle from '@/pages/Lifestyle';
 import { PreferencesProvider } from '@/lib/PreferencesContext';
+import { LanguageProvider } from '@/lib/LanguageContext';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -58,7 +59,9 @@ function App() {
         <Router>
           <ScrollToTop />
           <PreferencesProvider>
-            <AuthenticatedApp />
+            <LanguageProvider>
+              <AuthenticatedApp />
+            </LanguageProvider>
           </PreferencesProvider>
         </Router>
         <Toaster />

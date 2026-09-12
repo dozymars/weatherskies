@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { X, Loader2, MapPin, Search, CalendarCheck } from "lucide-react";
 import { getForecast, searchLocations } from "@/lib/weatherApi";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 import { convertTemp, tempUnit, convertWind, windUnit } from "@/lib/units";
 import { getWeatherInfo } from "@/lib/weatherCodes";
 import { bestDayToGo } from "@/lib/activityScores";
 
 function AddLocationSearch({ onAdd }) {
+  const { t, locale } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -59,7 +61,7 @@ function AddLocationSearch({ onAdd }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
-          placeholder="Add a city to compare…"
+          placeholder={t("lifestyle.addCity")}
           className="w-full h-10 pl-10 pr-3 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
         />
       </div>
@@ -67,7 +69,7 @@ function AddLocationSearch({ onAdd }) {
         <div className="absolute top-12 left-0 right-0 bg-white rounded-2xl shadow-2xl overflow-hidden z-50 border border-slate-200">
           {loading && results.length === 0 && (
             <div className="flex items-center justify-center py-4 text-slate-500">
-              <Loader2 className="w-4 h-4 animate-spin mr-2" /> Searching…
+              <Loader2 className="w-4 h-4 animate-spin mr-2" /> {t("search.searching")}
             </div>
           )}
           {results.map((r) => (
@@ -92,6 +94,7 @@ function AddLocationSearch({ onAdd }) {
 }
 
 function LocationColumn({ loc, onRemove, units }) {
+  const { t, tw, locale } = useLanguage();
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -121,7 +124,7 @@ function LocationColumn({ loc, onRemove, units }) {
   const best = forecast ? bestDayToGo(forecast.daily, 7) : null;
   const bestDate =
     best != null
-      ? new Date(`${forecast.daily.time[best.index]}T12:00:00Z`).toLocaleDateString(undefined, {
+      ? new Date(`${forecast.daily.time[best.index]}T12:00:00Z`).toLocaleDateString(locale, {
           weekday: "short",
           month: "short",
           day: "numeric",
@@ -151,7 +154,7 @@ function LocationColumn({ loc, onRemove, units }) {
           className="inline-flex items-center gap-1.5 mb-3 self-start rounded-full px-2.5 py-1 text-[11px] font-semibold"
           style={{ background: "#e0f2fe", color: "#0369a1" }}
         >
-          <CalendarCheck className="w-3 h-3" /> Best day: {bestDate}
+          <CalendarCheck className="w-3 h-3" /> {t("lifestyle.bestDay", { date: bestDate })}
         </div>
       )}
 
@@ -162,7 +165,7 @@ function LocationColumn({ loc, onRemove, units }) {
           ))}
         </div>
       ) : error ? (
-        <p className="text-xs text-slate-400 py-6 text-center">Couldn't load forecast.</p>
+        <p className="text-xs text-slate-400 py-6 text-center">{t("lifestyle.couldntLoad")}</p>
       ) : (
         <div className="space-y-1">
           {forecast.daily.time.slice(0, 7).map((day, i) => {
@@ -182,8 +185,8 @@ function LocationColumn({ loc, onRemove, units }) {
               >
                 <div className="w-10 text-[11px] text-slate-500 leading-tight">
                   {i === 0
-                    ? "Today"
-                    : new Date(`${day}T12:00:00Z`).toLocaleDateString(undefined, {
+                    ? t("daily.today")
+                    : new Date(`${day}T12:00:00Z`).toLocaleDateString(locale, {
                         weekday: "short",
                         timeZone: forecast.timezone,
                       })}
@@ -201,7 +204,7 @@ function LocationColumn({ loc, onRemove, units }) {
             );
           })}
           <p className="text-[10px] text-slate-400 pt-1">
-            Wind in {windUnit(units)} · {tempUnit(units)} temps
+            {t("lifestyle.windUnitTemps", { wunit: windUnit(units), tunit: tempUnit(units) })}
           </p>
         </div>
       )}
@@ -210,6 +213,7 @@ function LocationColumn({ loc, onRemove, units }) {
 }
 
 export default function TravelComparison({ seedLocations }) {
+  const { t } = useLanguage();
   const { units, savedLocations } = usePreferences();
   const [selected, setSelected] = useState(() =>
     (seedLocations?.length ? seedLocations : savedLocations).slice(0, 2)
@@ -241,9 +245,9 @@ export default function TravelComparison({ seedLocations }) {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="rounded-3xl bg-slate-100/70 border border-slate-200 p-5 sm:p-6 h-full"
     >
-      <h3 className="text-slate-800 text-base font-semibold">Travel Comparison</h3>
+      <h3 className="text-slate-800 text-base font-semibold">{t("lifestyle.travelComparison")}</h3>
       <p className="text-[11px] text-slate-500 mb-3 uppercase tracking-wider">
-        Pick 2–3 places · next 7 days
+        {t("lifestyle.travelSubtitle")}
       </p>
 
       <div className="mb-4">
@@ -253,7 +257,7 @@ export default function TravelComparison({ seedLocations }) {
       {selected.length === 0 ? (
         <div className="text-center py-8 text-sm text-slate-500">
           <MapPin className="w-6 h-6 mx-auto text-slate-300 mb-2" />
-          Add up to 3 locations to compare side by side.
+          {t("lifestyle.addEmpty")}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">

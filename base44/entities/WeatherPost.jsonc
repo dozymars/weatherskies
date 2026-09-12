@@ -25,6 +25,10 @@
     },
     "rank": {
       "type": "number"
+    },
+    "language": {
+      "type": "string",
+      "default": "en"
     }
   },
   "required": [

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { RefreshCw } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function WeatherNewsRefresh({ onRefreshed }) {
+  const { t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -39,7 +41,7 @@ export default function WeatherNewsRefresh({ onRefreshed }) {
       className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-600 hover:text-slate-900 disabled:opacity-50 transition mb-3"
     >
       <RefreshCw className={`w-3.5 h-3.5 ${busy ? "animate-spin" : ""}`} />
-      {busy ? "Refreshing…" : "Refresh now"}
+      {busy ? t("refresh.refreshing") : t("refresh.now")}
     </button>
   );
 }

@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="border-t border-slate-200 bg-white/60 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
@@ -15,16 +17,16 @@ export default function Footer() {
         </div>
         <nav className="flex items-center gap-5">
           <Link to="/" className="hover:text-slate-900 transition">
-            Home
+            {t("nav.home")}
           </Link>
           <Link to="/lifestyle" className="hover:text-slate-900 transition">
-            Lifestyle
+            {t("nav.lifestyle")}
           </Link>
           <Link to="/about" className="hover:text-slate-900 transition">
-            About
+            {t("nav.about")}
           </Link>
           <Link to="/contact" className="hover:text-slate-900 transition">
-            Contact
+            {t("nav.contact")}
           </Link>
         </nav>
         <p className="text-xs">© {new Date().getFullYear()} Weatherskies</p>

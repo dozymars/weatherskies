@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Star, ChevronDown, MapPin, Trash2 } from "lucide-react";
 import { usePreferences } from "@/lib/PreferencesContext";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function SavedLocationsDropdown({ currentLocation, onSelect }) {
   const { savedLocations, toggleSaved } = usePreferences();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -24,7 +26,7 @@ export default function SavedLocationsDropdown({ currentLocation, onSelect }) {
         className="flex items-center gap-1.5 h-9 px-3 rounded-full bg-white border border-slate-300 text-slate-700 text-sm hover:bg-slate-100 transition"
       >
         <Star className="w-4 h-4" />
-        <span className="hidden sm:inline">Saved</span>
+        <span className="hidden sm:inline">{t("nav.saved")}</span>
         <ChevronDown className="w-3.5 h-3.5" />
       </button>
       {open && (
@@ -62,7 +64,7 @@ export default function SavedLocationsDropdown({ currentLocation, onSelect }) {
                 <button
                   onClick={() => toggleSaved(l)}
                   className="px-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"
-                  title="Remove"
+                  title={t("save.removeTitle")}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

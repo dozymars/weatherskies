@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useLanguage } from "@/lib/LanguageContext";
 
 // Minimal radar-style map using OpenStreetMap tiles centered on the location.
 export default function WeatherMap({ location }) {
+  const { t } = useLanguage();
   const mapRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -42,7 +44,7 @@ export default function WeatherMap({ location }) {
   return (
     <div className="rounded-3xl bg-slate-100 border border-slate-200 p-5 sm:p-6 overflow-hidden">
       <h3 className="text-slate-700 text-sm font-semibold uppercase tracking-wider mb-4">
-        Map · {location?.name}
+        {t("map.title", { name: location?.name })}
       </h3>
       <div
         ref={containerRef}
