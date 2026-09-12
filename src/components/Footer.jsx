@@ -17,6 +17,9 @@ export default function Footer() {
           <Link to="/" className="hover:text-slate-900 transition">
             Home
           </Link>
+          <Link to="/lifestyle" className="hover:text-slate-900 transition">
+            Lifestyle
+          </Link>
           <Link to="/about" className="hover:text-slate-900 transition">
             About
           </Link>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 import WeatherSearch from "@/components/weather/WeatherSearch";
 import CurrentConditions from "@/components/weather/CurrentConditions";
 import HourlyForecast from "@/components/weather/HourlyForecast";
@@ -189,6 +190,12 @@ export default function Home() {
             <span className="font-semibold tracking-tight">Weatherskies</span>
           </div>
           <div className="flex items-center gap-2 shrink-0 order-2 ml-auto lg:ml-0 lg:order-3">
+            <Link
+              to="/lifestyle"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-sky-700 hover:bg-sky-50 border border-slate-200 transition"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> Lifestyle
+            </Link>
             <SavedLocationsDropdown currentLocation={location} onSelect={handleSelect} />
             <BackgroundThemePicker value={backgroundTheme} onChange={setBackgroundTheme} />
             <UnitToggle />
