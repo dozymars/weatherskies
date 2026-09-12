@@ -63,7 +63,7 @@ export default function DailyForecast({ daily, hourly, timezone }) {
                     <span className="block text-sm font-medium text-slate-900">
                       {dayLabel}
                     </span>
-                    <span className="block text-[10px] text-slate-400">{dateLabel}</span>
+                    <span className="block text-xs text-slate-400">{dateLabel}</span>
                   </span>
                   <ChevronDown
                     className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
@@ -72,8 +72,8 @@ export default function DailyForecast({ daily, hourly, timezone }) {
                   />
                 </span>
                 <Icon className={`w-7 h-7 justify-self-center ${info.color}`} strokeWidth={1.5} />
-                <span className="flex items-center gap-0.5 text-[11px] text-sky-600">
-                  <Droplets className="w-3 h-3" />
+                <span className="flex items-center gap-0.5 text-xs text-sky-600">
+                  <Droplets className="w-3.5 h-3.5" />
                   {pop}%
                 </span>
                 <div className="flex items-center gap-2">
@@ -89,8 +89,8 @@ export default function DailyForecast({ daily, hourly, timezone }) {
                   </div>
                   <span className="text-sm font-semibold text-slate-900 w-7">{Math.round(max)}°</span>
                 </div>
-                <span className="flex items-center gap-0.5 text-[11px] text-slate-500 justify-end">
-                  <Wind className="w-3 h-3" />
+                <span className="flex items-center gap-0.5 text-xs text-slate-500 justify-end">
+                  <Wind className="w-3.5 h-3.5" />
                   {Math.round(convertWind(daily.wind_speed_10m_max?.[i] ?? 0, units))}
                 </span>
               </button>
@@ -110,7 +110,7 @@ export default function DailyForecast({ daily, hourly, timezone }) {
           );
         })}
       </div>
-      <p className="text-[11px] text-slate-400 mt-2 text-right">{t("daily.windInUnit", { unit: windUnit(units) })}</p>
+      <p className="text-xs text-slate-400 mt-2 text-right">{t("daily.windInUnit", { unit: windUnit(units) })}</p>
     </motion.div>
   );
 }

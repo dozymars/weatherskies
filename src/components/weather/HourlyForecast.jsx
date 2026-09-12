@@ -48,8 +48,8 @@ export default function HourlyForecast({ hourly, timezone }) {
               <span className="text-base font-semibold text-slate-900">
                 {Math.round(convertTemp(hourly.temperature_2m[idx], units))}°
               </span>
-              <span className="flex items-center gap-0.5 text-[11px] text-sky-600">
-                <Droplets className="w-3 h-3" />
+              <span className="flex items-center gap-0.5 text-xs text-sky-600">
+                <Droplets className="w-3.5 h-3.5" />
                 {hourly.precipitation_probability?.[idx] ?? 0}%
               </span>
             </div>

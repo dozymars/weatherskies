@@ -88,14 +88,14 @@ export default function TempPrecipChart({ hourly }) {
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
           <XAxis
             dataKey="time"
-            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 11 }}
+            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 12 }}
             axisLine={{ stroke: "#e2e8f0" }}
             tickLine={false}
             interval={2}
           />
           <YAxis
             yAxisId="temp"
-            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 11 }}
+            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
             width={36}
@@ -104,7 +104,7 @@ export default function TempPrecipChart({ hourly }) {
             yAxisId="pop"
             orientation="right"
             domain={[0, 100]}
-            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 11 }}
+            tick={{ fill: "rgba(71,85,105,0.8)", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
             width={32}

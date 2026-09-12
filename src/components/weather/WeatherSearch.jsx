@@ -59,7 +59,7 @@ export default function WeatherSearch({ onSelect, onUseMyLocation, locating }) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
           placeholder={t("search.placeholder")}
-          className="w-full h-10 pl-10 pr-16 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 transition"
+          className="w-full h-10 pl-10 pr-16 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-base focus:outline-none focus:ring-2 focus:ring-slate-300 transition"
         />
         {query && (
           <button

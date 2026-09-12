@@ -131,7 +131,7 @@ export default function CurrentConditions({ location, current, daily }) {
             >
               <div className={`flex items-center gap-1.5 mb-1 ${d.accent.icon}`}>
                 <DIcon className="w-3.5 h-3.5 shrink-0" />
-                <span className="text-[11px] uppercase tracking-wider font-medium">
+                <span className="text-xs uppercase tracking-wider font-medium">
                   {d.label}
                 </span>
               </div>

@@ -38,12 +38,12 @@ export default function WeatherNews({ newsData, loading }) {
                 {a.url && <ExternalLink className="w-3 h-3 text-slate-400 shrink-0 mt-0.5" />}
               </div>
               {a.summary && (
-                <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{a.summary}</p>
+                <p className="text-sm text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{a.summary}</p>
               )}
               <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                 {a.locality && (
                   <span
-                    className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+                    className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
                       a.locality === "local"
                         ? "bg-emerald-100 text-emerald-700"
                         : a.locality === "national"
@@ -58,7 +58,7 @@ export default function WeatherNews({ newsData, loading }) {
                       : t("news.global")}
                   </span>
                 )}
-                <span className="text-[11px] text-slate-400">
+                <span className="text-xs text-slate-400">
                   {[a.source, a.date].filter(Boolean).join(" · ")}
                 </span>
               </div>
@@ -66,7 +66,7 @@ export default function WeatherNews({ newsData, loading }) {
           </div>
         </div>
       ))}
-      <p className="text-[11px] text-slate-400 pt-1">{t("news.footer")}</p>
+      <p className="text-xs text-slate-400 pt-1">{t("news.footer")}</p>
     </div>
   );
 }

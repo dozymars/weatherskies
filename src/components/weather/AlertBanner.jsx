@@ -30,7 +30,7 @@ export default function AlertBanner({ alerts }) {
         <AlertTriangle className="w-5 h-5 shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate">{top.event}</div>
-          <div className="text-xs text-white/80 truncate">
+          <div className="text-sm text-white/80 truncate">
             {top.headline || top.senderName || t("alert.active")}
           </div>
         </div>
@@ -57,18 +57,18 @@ export default function AlertBanner({ alerts }) {
               {alerts.map((a, i) => (
                 <div key={i} className="border-t border-white/20 pt-3">
                   <div className="text-sm font-semibold">{a.event}</div>
-                  <div className="text-xs text-white/80 mb-1">
+                  <div className="text-sm text-white/80 mb-1">
                     {t("alert.issuedBy", { name: a.senderName || t("alert.nws") })}
                     {a.expires &&
                       ` · ${t("alert.until", { date: new Date(a.expires).toLocaleString(locale) })}`}
                   </div>
                   {a.description && (
-                    <p className="text-xs text-white/90 whitespace-pre-line">
+                    <p className="text-sm text-white/90 whitespace-pre-line leading-relaxed">
                       {a.description}
                     </p>
                   )}
                   {a.instruction && (
-                    <p className="text-xs text-white/80 mt-1 italic">
+                    <p className="text-sm text-white/80 mt-1 italic leading-relaxed">
                       {a.instruction}
                     </p>
                   )}

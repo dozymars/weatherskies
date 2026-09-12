@@ -33,7 +33,7 @@ export default function ClothingSuggestion({ current, daily }) {
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <Icon className={`w-10 h-10 shrink-0 ${info.color}`} strokeWidth={1.5} />
           <div className="min-w-0">
-            <div className="text-[11px] uppercase tracking-wider text-slate-400 font-medium mb-0.5">
+            <div className="text-xs uppercase tracking-wider text-slate-400 font-medium mb-0.5">
               {t("lifestyle.whatToWear")}
             </div>
             <div className="text-lg sm:text-xl font-semibold text-slate-800 leading-snug">
@@ -50,7 +50,7 @@ export default function ClothingSuggestion({ current, daily }) {
                 className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 border border-slate-200 px-3 py-1.5 text-xs text-slate-600"
               >
                 <PIcon className="w-3.5 h-3.5 text-slate-400" />
-                <span className="text-slate-400 uppercase tracking-wider text-[10px]">
+                <span className="text-slate-400 uppercase tracking-wider text-xs">
                   {p.label}
                 </span>
                 <span className="font-semibold text-slate-800">{p.value}</span>

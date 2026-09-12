@@ -62,7 +62,7 @@ function AddLocationSearch({ onAdd }) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length && setOpen(true)}
           placeholder={t("lifestyle.addCity")}
-          className="w-full h-10 pl-10 pr-3 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
+          className="w-full h-10 pl-10 pr-3 rounded-full bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-base focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
         />
       </div>
       {open && (results.length > 0 || (loading && query.length >= 2)) && (
@@ -94,7 +94,7 @@ function AddLocationSearch({ onAdd }) {
 }
 
 function LocationColumn({ loc, onRemove, units }) {
-  const { t, tw, locale } = useLanguage();
+  const { t, locale } = useLanguage();
   const [forecast, setForecast] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -137,7 +137,7 @@ function LocationColumn({ loc, onRemove, units }) {
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="min-w-0">
           <div className="text-sm font-semibold text-slate-800 truncate">{loc.name}</div>
-          <div className="text-[11px] text-slate-400 truncate">
+          <div className="text-xs text-slate-400 truncate">
             {[loc.region, loc.country].filter(Boolean).join(", ")}
           </div>
         </div>
@@ -151,7 +151,7 @@ function LocationColumn({ loc, onRemove, units }) {
 
       {best && (
         <div
-          className="inline-flex items-center gap-1.5 mb-3 self-start rounded-full px-2.5 py-1 text-[11px] font-semibold"
+          className="inline-flex items-center gap-1.5 mb-3 self-start rounded-full px-2.5 py-1 text-xs font-semibold"
           style={{ background: "#e0f2fe", color: "#0369a1" }}
         >
           <CalendarCheck className="w-3 h-3" /> {t("lifestyle.bestDay", { date: bestDate })}
@@ -183,7 +183,7 @@ function LocationColumn({ loc, onRemove, units }) {
                   isBest ? "bg-sky-50 border border-sky-200" : "hover:bg-slate-50"
                 }`}
               >
-                <div className="w-10 text-[11px] text-slate-500 leading-tight">
+                <div className="w-10 text-xs text-slate-500 leading-tight">
                   {i === 0
                     ? t("daily.today")
                     : new Date(`${day}T12:00:00Z`).toLocaleDateString(locale, {
@@ -196,14 +196,14 @@ function LocationColumn({ loc, onRemove, units }) {
                   <span className="font-semibold text-slate-800">{Math.round(hi)}°</span>
                   <span className="text-slate-400">{Math.round(lo)}°</span>
                 </div>
-                <div className="text-[10px] text-sky-600 w-8 text-right">{pop}%</div>
-                <div className="text-[10px] text-slate-400 w-10 text-right">
+                <div className="text-xs text-sky-600 w-8 text-right">{pop}%</div>
+                <div className="text-xs text-slate-400 w-10 text-right">
                   {Math.round(wind)}
                 </div>
               </div>
             );
           })}
-          <p className="text-[10px] text-slate-400 pt-1">
+          <p className="text-xs text-slate-400 pt-1">
             {t("lifestyle.windUnitTemps", { wunit: windUnit(units), tunit: tempUnit(units) })}
           </p>
         </div>
@@ -246,7 +246,7 @@ export default function TravelComparison({ seedLocations }) {
       className="rounded-3xl bg-slate-100/70 border border-slate-200 p-5 sm:p-6 h-full"
     >
       <h3 className="text-slate-800 text-base font-semibold">{t("lifestyle.travelComparison")}</h3>
-      <p className="text-[11px] text-slate-500 mb-3 uppercase tracking-wider">
+      <p className="text-xs text-slate-500 mb-3 uppercase tracking-wider">
         {t("lifestyle.travelSubtitle")}
       </p>
 

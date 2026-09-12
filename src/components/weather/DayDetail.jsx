@@ -84,7 +84,7 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
       <div className="py-4 space-y-4">
         {dayHours.length > 0 && (
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-slate-400 mb-2 font-medium">
+            <p className="text-xs uppercase tracking-wider text-slate-400 mb-2 font-medium">
               {t("dayDetail.hourly")}
             </p>
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
@@ -97,15 +97,15 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
                     key={k}
                     className="flex flex-col items-center gap-1 min-w-[52px] rounded-xl bg-white border border-slate-200 px-2 py-2"
                   >
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-xs text-slate-500">
                       {tm.toLocaleTimeString(locale, { hour: "numeric" })}
                     </span>
                     <Icon className={`w-5 h-5 ${info.color}`} strokeWidth={1.5} />
                     <span className="text-xs font-semibold text-slate-900">
                       {Math.round(convertTemp(hourly.temperature_2m[k], units))}°
                     </span>
-                    <span className="flex items-center gap-0.5 text-[9px] text-sky-600">
-                      <Droplets className="w-2.5 h-2.5" />
+                    <span className="flex items-center gap-0.5 text-xs text-sky-600">
+                      <Droplets className="w-3 h-3" />
                       {hourly.precipitation_probability?.[k] ?? 0}%
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export default function DayDetail({ dayIndex, daily, hourly }) {
               >
                 <div className="flex items-center gap-1.5 text-slate-500 mb-1">
                   <SIcon className="w-3 h-3 shrink-0" />
-                  <span className="text-[10px] uppercase tracking-wider font-medium">
+                  <span className="text-xs uppercase tracking-wider font-medium">
                     {s.label}
                   </span>
                 </div>

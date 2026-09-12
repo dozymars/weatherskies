@@ -26,7 +26,7 @@ function ScoreBar({ score }) {
         ))}
       </div>
       <span
-        className="text-[11px] font-semibold w-3 text-center"
+        className="text-xs font-semibold w-3 text-center"
         style={{ color: SCORE_COLORS[score] }}
       >
         {score}
@@ -52,7 +52,7 @@ export default function ActivityIndexGrid({ daily, timezone }) {
       className="rounded-3xl bg-white/85 backdrop-blur-md border border-slate-200 p-5 sm:p-6 h-full"
     >
       <h3 className="text-slate-800 text-base font-semibold">{t("lifestyle.activityIndex")}</h3>
-      <p className="text-[11px] text-slate-500 mb-4 uppercase tracking-wider">
+      <p className="text-xs text-slate-500 mb-4 uppercase tracking-wider">
         {t("lifestyle.bestDayWeek")}
       </p>
 
@@ -73,13 +73,13 @@ export default function ActivityIndexGrid({ daily, timezone }) {
               className={`rounded-2xl border px-2 py-3 text-center ${meta.card}`}
             >
               <Icon className={`w-5 h-5 mx-auto mb-1 ${meta.iconColor}`} />
-              <div className={`text-[11px] font-medium ${meta.labelColor}`}>
+              <div className={`text-xs font-medium ${meta.labelColor}`}>
                 {t(meta.key)}
               </div>
               <div
-                className={`mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${meta.pill}`}
+                className={`mt-1.5 inline-flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded-full ${meta.pill}`}
               >
-                <CalendarDays className="w-2.5 h-2.5" /> {bestDate}
+                <CalendarDays className="w-3 h-3" /> {bestDate}
               </div>
             </div>
           );
@@ -87,8 +87,8 @@ export default function ActivityIndexGrid({ daily, timezone }) {
       </div>
 
       <div className="overflow-x-auto -mx-2 px-2">
-        <div className="min-w-[440px]">
-          <div className="grid grid-cols-[64px_repeat(4,1fr)] gap-2 text-[10px] uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-100">
+        <div className="min-w-[500px]">
+          <div className="grid grid-cols-[72px_repeat(4,1fr)] gap-2 text-xs uppercase tracking-wider text-slate-400 pb-2 border-b border-slate-100">
             <div>{t("lifestyle.day")}</div>
             {ACTIVITIES.map((a) => (
               <div key={a.key} className="text-center">
@@ -110,11 +110,11 @@ export default function ActivityIndexGrid({ daily, timezone }) {
             return (
               <div
                 key={day.date}
-                className="grid grid-cols-[64px_repeat(4,1fr)] gap-2 items-center py-2 border-b border-slate-50 last:border-0"
+                className="grid grid-cols-[72px_repeat(4,1fr)] gap-2 items-center py-2 border-b border-slate-50 last:border-0"
               >
                 <div className="leading-tight">
                   <div className="text-xs font-medium text-slate-800">{label}</div>
-                  <div className="text-[10px] text-slate-400">{dateStr}</div>
+                  <div className="text-xs text-slate-400">{dateStr}</div>
                 </div>
                 {ACTIVITIES.map((a) => (
                   <div key={a.key} className="flex justify-center">

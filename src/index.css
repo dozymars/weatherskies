@@ -86,7 +86,13 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
+    line-height: 1.6;
   }
 }

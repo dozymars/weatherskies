@@ -55,17 +55,17 @@ export default function AirAtmosphere({ airData }) {
           </div>
           <div className="min-w-0">
             <div className="text-sm font-semibold text-slate-900">{t(level.labelKey)}</div>
-            <p className="text-xs text-slate-500 mt-0.5">{t(level.adviceKey)}</p>
+            <p className="text-sm text-slate-500 mt-0.5 leading-relaxed">{t(level.adviceKey)}</p>
           </div>
         </div>
       )}
       <div className="grid grid-cols-2 gap-2">
         {POLLUTANTS.map((p) => (
           <div key={p.key} className="rounded-xl bg-white border border-slate-200 px-3 py-2">
-            <div className="text-[11px] text-slate-500 uppercase tracking-wide">{p.label}</div>
+            <div className="text-xs text-slate-500 uppercase tracking-wide">{p.label}</div>
             <div className="text-sm font-semibold text-slate-900">
               {airData[p.key] != null ? airData[p.key].toFixed(1) : "—"}
-              <span className="text-[10px] font-normal text-slate-400 ml-1">{p.unit}</span>
+              <span className="text-xs font-normal text-slate-400 ml-1">{p.unit}</span>
             </div>
           </div>
         ))}
@@ -83,7 +83,7 @@ export default function AirAtmosphere({ airData }) {
               key={pl.label}
               className="flex-1 rounded-xl bg-white border border-slate-200 px-3 py-2 text-center"
             >
-              <div className="text-[11px] text-slate-500 uppercase tracking-wide">{pl.label}</div>
+              <div className="text-xs text-slate-500 uppercase tracking-wide">{pl.label}</div>
               <div className={`text-sm font-semibold ${color}`}>{lvl}</div>
             </div>
           );
