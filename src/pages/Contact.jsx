@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
 import LanguageSwitcher from "@/components/weather/LanguageSwitcher";
 import { useLanguage } from "@/lib/LanguageContext";
-
-const CONTACT_EMAIL = "hello@weatherskies.app";
+import { base44 } from "@/api/base44Client";
 
 export default function Contact() {
   const { t } = useLanguage();
@@ -21,12 +20,15 @@ export default function Contact() {
     setStatus("sending");
     setError("");
     try {
-      const subject = t("contact.subjectPrefix", { name: name || t("contact.visitor") });
-      const body = `${t("contact.name")}: ${name || "—"}\n${t("contact.email")}: ${email || "—"}\n\n${message}`;
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`;
+      await base44.functions.invoke("sendContactMessage", {
+        name,
+        email,
+        message,
+      });
       setStatus("sent");
+      setName("");
+      setEmail("");
+      setMessage("");
     } catch {
       setError(t("contact.error"));
       setStatus("error");
@@ -65,16 +67,6 @@ export default function Contact() {
           {t("contact.title")}
         </h1>
         <p className="text-slate-600 leading-relaxed mb-8">{t("contact.intro")}</p>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 mb-6">
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="flex items-center gap-2 text-slate-700 hover:text-slate-900 transition"
-          >
-            <Mail className="w-5 h-5 text-sky-500" />
-            <span className="font-medium">{CONTACT_EMAIL}</span>
-          </a>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
