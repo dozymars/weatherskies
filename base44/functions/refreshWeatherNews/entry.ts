@@ -1,54 +1,48 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.44';
 
-const GDACS_RSS_URL = 'https://www.gdacs.org/xml/rss.xml';
 const LANGUAGES = ['en', 'es', 'fr', 'de', 'zh', 'ar', 'hi', 'pt'];
 const TOP_N = 7;
+const TODAY = new Date().toISOString().slice(0, 10);
 
-// Decode common HTML/XML entities in RSS text.
-function decodeEntities(s: string): string {
-  return s
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function extractTag(xml: string, tag: string): string {
-  const m = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'i'));
-  return m ? decodeEntities(m[1]) : '';
-}
-
-// Alert severity: Red > Orange > Green (0 default for unknown).
-function alertLevel(title: string): number {
-  if (/red alert/i.test(title)) return 3;
-  if (/orange alert/i.test(title)) return 2;
-  return 1;
-}
-
-function parseRss(xml: string) {
-  const items: any[] = [];
-  const blocks = xml.split('<item>').slice(1);
-  for (const block of blocks) {
-    const end = block.indexOf('</item>');
-    const itemXml = end >= 0 ? block.slice(0, end) : block;
-    const title = extractTag(itemXml, 'title');
-    const description = extractTag(itemXml, 'description');
-    const link = extractTag(itemXml, 'link');
-    const pubDate = extractTag(itemXml, 'pubDate');
-    if (!title) continue;
-    let storyDate = new Date().toISOString().slice(0, 10);
-    if (pubDate) {
-      const d = new Date(pubDate);
-      if (!isNaN(d.getTime())) storyDate = d.toISOString().slice(0, 10);
+const NEWS_SCHEMA = {
+  type: 'object',
+  properties: {
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          summary: { type: 'string' },
+          source: { type: 'string' }
+        },
+        required: ['title', 'summary', 'source']
+      }
     }
-    items.push({ title, summary: description, link, storyDate, alert: alertLevel(title), pubDateMs: pubDate ? Date.parse(pubDate) || 0 : 0 });
   }
-  return items;
+};
+
+async function fetchEnglishNews(base44: any): Promise<any[]> {
+  const prompt = `Today is ${TODAY}. Find the ${TOP_N} most significant currently-active or very recent weather and natural-disaster events happening around the world right now — hurricanes, typhoons, floods, heatwaves, wildfires, severe storms, droughts, earthquakes, and volcanic activity.
+
+Requirements:
+- Only include events that are actually occurring or have just occurred in the last few days. Do NOT include events from months or years ago.
+- Do NOT include any date in the title or summary.
+- For each item return a concise "title" (max 100 chars), a one-to-two sentence "summary" (max 300 chars) describing the event and its location/impact, and a short "source" identifying the outlet or agency (e.g. "Reuters", "BBC", "NOAA", "NHC", "GDACS").
+- Return exactly ${TOP_N} items, or fewer if that many genuinely significant current events don't exist.`;
+  const res = await base44.asServiceRole.integrations.Core.InvokeLLM({
+    prompt,
+    add_context_from_internet: true,
+    model: 'gemini_3_flash',
+    response_json_schema: NEWS_SCHEMA
+  });
+  const items = Array.isArray(res) ? res : res.items || [];
+  return items.slice(0, TOP_N).map((i: any) => ({
+    title: String(i.title || '').slice(0, 200),
+    summary: String(i.summary || '').slice(0, 600),
+    source: String(i.source || 'Web').slice(0, 60),
+    story_date: TODAY
+  })).filter((i: any) => i.title);
 }
 
 const TRANSLATION_SCHEMA = {
@@ -95,20 +89,8 @@ export default async function(req) {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Fetch + parse the live GDACS feed.
-    const res = await fetch(GDACS_RSS_URL, { headers: { 'User-Agent': 'Weatherskies/1.0' } });
-    if (!res.ok) throw new Error(`GDACS fetch failed: ${res.status}`);
-    const xml = await res.text();
-    const all = parseRss(xml);
-
-    // Rank by alert severity, then recency.
-    all.sort((a, b) => b.alert - a.alert || b.pubDateMs - a.pubDateMs);
-    const top = all.slice(0, TOP_N).map((i, idx) => ({
-      title: String(i.title).slice(0, 200),
-      summary: String(i.summary).slice(0, 600),
-      source: 'GDACS',
-      story_date: i.storyDate
-    }));
+    // Generate current global weather/disaster news via AI web search.
+    const top = await fetchEnglishNews(base44);
 
     // Translate into each language, then write per-language records.
     const records: any[] = [];

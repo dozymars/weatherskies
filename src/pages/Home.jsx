@@ -111,12 +111,6 @@ export default function Home() {
           title: p.title,
           summary: p.summary,
           source: p.source,
-          date: p.story_date
-            ? new Date(`${p.story_date}T12:00:00Z`).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })
-            : "",
           locality: p.locality || "global",
         }))
       );
