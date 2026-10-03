@@ -76,7 +76,7 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [locating, setLocating] = useState(false);
   const { backgroundTheme, setBackgroundTheme } = usePreferences();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const loadData = useCallback(async (loc) => {
     setLoading(true);
@@ -100,9 +100,14 @@ export default function Home() {
   const loadNews = useCallback(async () => {
     setNewsLoading(true);
     try {
-      const posts = await base44.entities.WeatherPost.list("rank", 10);
+      let posts = await base44.entities.WeatherPost.filter({ language: lang, locality: "global" }, { sort: "rank", limit: 10 });
+      let items = posts?.items || [];
+      if (items.length === 0 && lang !== "en") {
+        const en = await base44.entities.WeatherPost.filter({ language: "en", locality: "global" }, { sort: "rank", limit: 10 });
+        items = en?.items || [];
+      }
       setNewsData(
-        (posts || []).map((p) => ({
+        items.map((p) => ({
           title: p.title,
           summary: p.summary,
           source: p.source,
@@ -120,7 +125,7 @@ export default function Home() {
     } finally {
       setNewsLoading(false);
     }
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     loadNews();
