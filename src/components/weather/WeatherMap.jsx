@@ -20,8 +20,8 @@ export default function WeatherMap({ location }) {
       }).setView([location.latitude, location.longitude], 8);
 
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        { maxZoom: 19 }
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16, attribution: "Esri, HERE, Garmin, &amp; contributors" }
       ).addTo(mapRef.current);
 
       const marker = L.marker([location.latitude, location.longitude]).addTo(mapRef.current);
