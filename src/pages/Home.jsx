@@ -106,14 +106,35 @@ export default function Home() {
         const en = await base44.entities.WeatherPost.filter({ language: "en", locality: "global" }, { sort: "rank", limit: 10 });
         items = en?.items || [];
       }
-      setNewsData(
-        items.map((p) => ({
+
+      // Map posts to include a formatted date if the entity provides one.
+      const mapped = items.map((p) => {
+        // Try common date fields used by content services
+        const dateCandidate = p.publishedAt || p.published_at || p.publishedDate || p.published_date || p.createdAt || p.created_at || p.date || null;
+        let dateStr = null;
+        if (dateCandidate) {
+          try {
+            const d = new Date(dateCandidate);
+            if (!isNaN(d.getTime())) {
+              // Format as short month + day, e.g. "Oct 12" using user's language when available
+              dateStr = d.toLocaleDateString(lang || undefined, { month: 'short', day: 'numeric' });
+            }
+          } catch (e) {
+            dateStr = null;
+          }
+        }
+
+        return {
           title: p.title,
           summary: p.summary,
           source: p.source,
           locality: p.locality || "global",
-        }))
-      );
+          url: p.url || p.link || null,
+          date: dateStr,
+        };
+      });
+
+      setNewsData(mapped);
     } catch {
       setNewsData([]);
     } finally {
