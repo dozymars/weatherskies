@@ -58,9 +58,20 @@ export default function WeatherNews({ newsData, loading }) {
                       : t("news.global")}
                   </span>
                 )}
-                <span className="text-xs text-slate-400">
-                  {[a.source, a.date].filter(Boolean).join(" · ")}
-                </span>
+
+                {/* Source and publish date */}
+                <div className="flex items-center gap-2">
+                  {a.source && <span className="text-xs text-slate-500">{a.source}</span>}
+                  {a.rawDate || a.date ? (
+                    <time
+                      dateTime={a.rawDate || undefined}
+                      className="text-xs text-slate-400"
+                      title={a.rawDate || undefined}
+                    >
+                      {a.date || (a.rawDate ? a.rawDate.slice(0, 10) : null)}
+                    </time>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
