@@ -63,7 +63,29 @@ function locationFromURL() {
   return null;
 }
 
+function getNested(obj, path) {
+  return path.split('.').reduce((acc, key) => (acc && acc[key] != null ? acc[key] : null), obj);
+}
 
+function tryParseDate(value) {
+  if (!value) return null;
+  // If it's a number (unix timestamp in seconds or ms)
+  if (typeof value === 'number') {
+    // Heuristic: if > 1e12 then assume ms, else seconds
+    const ts = value > 1e12 ? value : value * 1000;
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  // If it's a string, try parsing
+  if (typeof value === 'string') {
+    // ISO or numeric string
+    const n = Number(value);
+    if (!isNaN(n)) return tryParseDate(n);
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
 
 export default function Home() {
   const [location, setLocation] = useState(() => locationFromURL() || locationFromStorage());
@@ -107,20 +129,54 @@ export default function Home() {
         items = en?.items || [];
       }
 
-      // Map posts to include a formatted date if the entity provides one.
+      // Console debug to inspect raw payload (helpful when hosted items use unexpected fields)
+      try {
+        // Only print in non-sensitive environments; Base44 hosted may show logs in devtools for frontend
+        console.debug("[WeatherNews] fetched items:", items);
+      } catch (e) {
+        // ignore
+      }
+
+      // Broad detection of possible date fields on the item
+      const datePaths = [
+        'publishedAt','published_at','publishedDate','published_date','publishedOn','publishedOnDate','published','pub_date','pubDate',
+        'createdAt','created_at','created','createdOn','date','time','updatedAt','updated_at','updated',
+        '_sys.publishedAt','_sys.published_at','_sys.createdAt','_sys.created_at','_sys.published','_sys.first_published_at',
+        'metadata.published','metadata.publishedAt','metadata.created','metadata.date',
+        'attributes.publishedAt','attributes.createdAt','attributes.date',
+        'fields.publishedAt','fields.date','properties.date'
+      ];
+
       const mapped = items.map((p) => {
-        // Try common date fields used by content services
-        const dateCandidate = p.publishedAt || p.published_at || p.publishedDate || p.published_date || p.createdAt || p.created_at || p.date || null;
+        // debug single item shape (helpful for investigation)
+        try {
+          console.debug('[WeatherNews] item raw:', p && (p.id || p.title || p));
+        } catch (e) {}
+
+        let found = null;
+        for (const path of datePaths) {
+          const v = getNested(p, path);
+          const d = tryParseDate(v);
+          if (d) {
+            found = d;
+            break;
+          }
+        }
+
+        // fallback to common flat fields previously used
+        if (!found) {
+          const fallback = p.publishedAt || p.published_at || p.createdAt || p.created_at || p.date || null;
+          found = tryParseDate(fallback);
+        }
+
+        let rawDate = null;
         let dateStr = null;
-        if (dateCandidate) {
+        if (found) {
+          rawDate = found.toISOString();
           try {
-            const d = new Date(dateCandidate);
-            if (!isNaN(d.getTime())) {
-              // Format as short month + day, e.g. "Oct 12" using user's language when available
-              dateStr = d.toLocaleDateString(lang || undefined, { month: 'short', day: 'numeric' });
-            }
+            dateStr = found.toLocaleDateString(lang || undefined, { month: 'short', day: 'numeric' });
           } catch (e) {
-            dateStr = null;
+            dateStr = found.toDateString();
           }
         }
 
@@ -131,11 +187,13 @@ export default function Home() {
           locality: p.locality || "global",
           url: p.url || p.link || null,
           date: dateStr,
+          rawDate,
         };
       });
 
       setNewsData(mapped);
-    } catch {
+    } catch (e) {
+      console.warn('[WeatherNews] load error', e);
       setNewsData([]);
     } finally {
       setNewsLoading(false);
